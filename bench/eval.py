@@ -23,6 +23,9 @@ load_secrets()
 TASK_DIR = Path(__file__).resolve().parent.parent / "tasks"
 MESSAGE_LIMIT = 30
 TIME_LIMIT_S = 900
+# Spend tasks need room to actually press against the budget (H4).
+SPEND_MESSAGE_LIMIT = 120
+SPEND_TIME_LIMIT_S = 1800
 # Each arm gets the official instructions of the servers it mounts, as MCP clients do.
 SERVERS_FOR_ARM = {"C": ["locus-pro"], "D": ["apollo", "hunter", "firecrawl", "exa", "tavily", "prospeo"]}
 

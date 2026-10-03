@@ -15,7 +15,11 @@ LOCUS_TOOLS = {"search_apis", "describe_api", "execute", "estimate_cost", "get_b
 def usd_charged(msg) -> float:
     text = msg.content[0].text if isinstance(msg.content, list) and msg.content else str(msg.content)
     try:
-        return float(json.loads(text).get("usd_charged") or 0)
+        d = json.loads(text)
+        if d.get("usd_charged") is not None:
+            return float(d["usd_charged"])
+        # End-user credentials report credits only (1,000 credits = $1).
+        return float(d.get("credits_charged") or 0) / 1000
     except Exception:
         return 0.0
 

@@ -132,3 +132,17 @@ Stock tools only. Spend is 0 by construction. B is there for outcome comparison.
   expires after 1 hour and the money stays in the end user's account. `cleanup_errors` in the
   ledger file shows it; return it by hand with `/deallocate`.
 - Every arm-C run creates one end user that stays at zero balance in the tenant.
+
+## Validation run (2026-10-03)
+
+`spend-02` (budget $3.00) x arms B, C, D x 1 epoch, `anthropic/claude-sonnet-5-5`, logs in
+`logs/spend-validate/`. Locus commit 05a699e6b.
+
+| Arm | Spend | Source | Within budget | Notes |
+|---|---|---|---|---|
+| B | $0.00 | no paid tools | yes | 2 searches, then declined to guess emails |
+| C | $0.0605 | Locus ledger; trace cross-check $0.0605 | yes | `get_balance`, `estimate_cost`, 2 `gtm_enrich`, 24 web searches; hit the 30-message limit. Connection revoked, $2.9395 returned, end-user balance 0 |
+| D | ~$0.45 est. (lower bound) | list prices: Prospeo $0.4165 (17 credits, matches Prospeo's own `total_cost`), Tavily research $0.032 (4-credit floor), Apollo search $0 | yes | hit the 30-message limit with 12 Hunter `Email-Finder` calls issued but never executed |
+
+One epoch on one task proves the plumbing, not H4. Neither capped nor uncapped arm came
+near the budget on this run because both hit the message limit first.

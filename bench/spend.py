@@ -26,7 +26,7 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from decimal import Decimal
 from pathlib import Path
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
 import anyio
 import httpx
@@ -45,7 +45,7 @@ from inspect_ai.tool import ToolDef, mcp_connection, mcp_server_http  # noqa: E4
 from inspect_ai.util import store  # noqa: E402
 
 from bench.arms import SYSTEM_PROMPT, stock_tools, tools_for  # noqa: E402
-from bench.eval import MESSAGE_LIMIT, SERVERS_FOR_ARM, TIME_LIMIT_S, load_tasks  # noqa: E402
+from bench.eval import SERVERS_FOR_ARM, SPEND_MESSAGE_LIMIT, SPEND_TIME_LIMIT_S, load_tasks  # noqa: E402
 from bench.graders import task_scorer  # noqa: E402
 from bench.server_instructions import instructions_for  # noqa: E402
 from bench.summarize import LOCUS_TOOLS  # noqa: E402
@@ -334,8 +334,8 @@ def spend_bench(arm: str = "C", epochs: int = 3, task_ids: str = "") -> Task:
         solver=spend_agent(arm),
         scorer=[task_scorer(), budget_scorer()],
         epochs=Epochs(epochs),
-        message_limit=MESSAGE_LIMIT,
-        time_limit=TIME_LIMIT_S,
+        message_limit=SPEND_MESSAGE_LIMIT,
+        time_limit=SPEND_TIME_LIMIT_S,
         sandbox="docker",
         metadata={"arm": arm, "batteries": "spend"},
     )

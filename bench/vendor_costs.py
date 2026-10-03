@@ -17,7 +17,7 @@ import json
 import math
 import re
 from dataclasses import dataclass
-from typing import Callable
+from collections.abc import Callable
 
 PRICES_READ_ON = "2026-10-03"
 
@@ -106,6 +106,9 @@ def _hunter(fn: str, args: dict, out: str) -> Priced | None:
 
 
 def _prospeo(fn: str, args: dict, out: str) -> Priced | None:
+    m = re.search(r'"total_cost"\s*:\s*(\d+(?:\.\d+)?)', out)
+    if m:
+        return _credit("prospeo", float(m.group(1)), "total_cost reported by Prospeo")
     if fn in ("search_suggestions", "get_account_info"):
         return _credit("prospeo", 0, "free")
     if fn == "enrich_person":
@@ -218,7 +221,11 @@ def estimate_trace_cost(messages) -> dict:
             fn = tc.function
             if not (fn.startswith(VENDOR_PREFIXES) or fn in VENDOR_NAMES):
                 continue  # stock tools (web_search, web_fetch, python) are not vendor spend
-            out = results.get(tc.id, "")
+            if tc.id not in results:
+                # The run hit its message limit before the call ran.
+                lines.append({"tool": fn, "vendor": None, "credits": 0, "usd": 0.0, "rule": "not executed"})
+                continue
+            out = results[tc.id]
             if tc.id in errors:
                 lines.append({"tool": fn, "vendor": None, "credits": 0, "usd": 0.0, "rule": "tool error: not billed"})
                 continue
