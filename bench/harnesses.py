@@ -6,10 +6,15 @@ Secrets come from bench.secrets.load_secrets() and are passed via the child env
 only (the MCP bearer token is referenced by env var name, never written to disk).
 
     run_harness("claude-code", prompt, with_locus=True, model=None)
+    run_harness("claude-code", prompt, with_locus=True, model=None, locus_mode="mcp+skill")
     -> {"final_answer", "tool_calls", "raw_trace_path", "exit_code", "duration_s", "usage", ...}
 
 Baseline arm (with_locus=False) keeps each CLI's built-in web search / fetch
 tools enabled and mounts no MCP servers.
+
+locus_mode refines with_locus: "none" (baseline), "mcp" (Locus Pro MCP only, the
+default when with_locus=True) or "mcp+skill" (MCP plus the official Locus skills,
+installed per harness the way the Locus docs say; see docs/harness-track.md).
 """
 
 from __future__ import annotations
@@ -29,6 +34,10 @@ NODE_BIN = ROOT / "harnesses" / "node" / "node_modules" / ".bin"
 TRACE_ROOT = ROOT / "results" / "raw" / "harness"
 
 LOCUS_SERVER = "locus-pro"
+LOCUS_MODES = ("none", "mcp", "mcp+skill")
+# Official Locus plugin repo (github.com/locus-technologies/locus-pro-plugin), cloned read-only.
+LOCUS_PLUGIN_DIR = ROOT / "harnesses" / "locus-pro-plugin"
+LOCUS_SKILLS = ("locus", "locus-setup", "locus-workflows")
 
 DEFAULT_MODELS = {
     "claude-code": "claude-sonnet-5-5",
@@ -52,9 +61,16 @@ def _base_env(home: Path) -> dict[str, str]:
     return env
 
 
-def _fresh_dirs(name: str, with_locus: bool) -> tuple[Path, Path, Path]:
-    """(home, workdir, trace_path) for one run. Home persists per harness+arm; workdir is fresh."""
-    arm = "locus" if with_locus else "baseline"
+def _arm_label(locus_mode: str) -> str:
+    return {"none": "baseline", "mcp": "locus", "mcp+skill": "locus-skill"}[locus_mode]
+
+
+def _fresh_dirs(name: str, locus_mode: str) -> tuple[Path, Path, Path]:
+    """(home, workdir, trace_path) for one run. Home persists per harness+arm; workdir is fresh.
+
+    Each locus_mode gets its own home, so skills installed for "mcp+skill" never leak into
+    the baseline or MCP-only arms."""
+    arm = _arm_label(locus_mode)
     home = HOME_ROOT / name / arm
     run_id = time.strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:6]
     work = HOME_ROOT / name / "work" / f"{arm}-{run_id}"
@@ -78,6 +94,12 @@ def _run(cmd: list[str], env: dict[str, str], cwd: Path, trace_path: Path, timeo
     return code, trace_path.read_text(), time.monotonic() - t0
 
 
+def _install_quiet(cmd: list[str], env: dict[str, str]) -> None:
+    proc = subprocess.run(cmd, env=env, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=300)
+    if proc.returncode != 0:
+        raise RuntimeError(f"install step failed: {' '.join(cmd[:4])}: {proc.stderr[-500:]}")
+
+
 def _jsonl(text: str) -> list[dict]:
     events = []
     for line in text.splitlines():
@@ -93,8 +115,22 @@ def _jsonl(text: str) -> list[dict]:
 # --------------------------------------------------------------------------- claude code
 
 
-def _claude(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
-    home, work, trace = _fresh_dirs("claude-code", with_locus)
+def _ensure_claude_plugin(env: dict[str, str]) -> None:
+    """Official route (Locus docs): `/plugin marketplace add locus-technologies/locus-pro-plugin`
+    then `/plugin install locus@locus`, done here with the CLI equivalents against the read-only
+    clone, inside the isolated CLAUDE_CONFIG_DIR. The plugin's own MCP entry (OAuth, alias
+    `locus`) is excluded by --strict-mcp-config; the bearer-auth server below is the connection."""
+    marker = Path(env["CLAUDE_CONFIG_DIR"]) / "plugins" / "installed_plugins.json"
+    if marker.exists() and "locus@locus" in marker.read_text():
+        return
+    claude = str(NODE_BIN / "claude")
+    _install_quiet([claude, "plugin", "marketplace", "add", str(LOCUS_PLUGIN_DIR)], env)
+    _install_quiet([claude, "plugin", "install", "locus@locus"], env)
+
+
+def _claude(prompt: str, locus_mode: str, model: str, timeout_s: int) -> dict:
+    with_locus = locus_mode != "none"
+    home, work, trace = _fresh_dirs("claude-code", locus_mode)
     env = _base_env(home)
     env["CLAUDE_CONFIG_DIR"] = str(home / ".claude")
     env["ANTHROPIC_API_KEY"] = os.environ["ANTHROPIC_API_KEY"]
@@ -111,6 +147,9 @@ def _claude(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
             "headers": {"Authorization": "Bearer ${LOCUS_PRO_API_KEY}"},  # expanded by claude from env
         }
         allowed.append(f"mcp__{LOCUS_SERVER}")
+    if locus_mode == "mcp+skill":
+        _ensure_claude_plugin(env)
+        allowed.append("Skill")  # plugin skills are invoked through the Skill tool
     mcp_path = home / f"mcp-{'locus' if with_locus else 'none'}.json"
     mcp_path.write_text(json.dumps(mcp_config))
 
@@ -147,30 +186,51 @@ def _claude(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
 # --------------------------------------------------------------------------- codex
 
 
-def _codex(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
-    home, work, trace = _fresh_dirs("codex", with_locus)
+def _ensure_codex_plugin(env: dict[str, str]) -> None:
+    """Official route (Locus docs): `codex plugin marketplace add locus-technologies/locus-pro-plugin`
+    then `codex plugin add locus@locus`, run against the read-only clone inside the isolated
+    CODEX_HOME. This writes only the marketplace and plugin entries to <CODEX_HOME>/config.toml."""
+    cfg = Path(env["CODEX_HOME"]) / "config.toml"
+    if cfg.exists() and 'plugins."locus@locus"' in cfg.read_text():
+        return
+    codex = str(NODE_BIN / "codex")
+    _install_quiet([codex, "plugin", "marketplace", "add", str(LOCUS_PLUGIN_DIR)], env)
+    _install_quiet([codex, "plugin", "add", "locus@locus"], env)
+
+
+def _codex(prompt: str, locus_mode: str, model: str, timeout_s: int) -> dict:
+    with_locus = locus_mode != "none"
+    home, work, trace = _fresh_dirs("codex", locus_mode)
     env = _base_env(home)
     env["CODEX_HOME"] = str(home / ".codex")
     (home / ".codex").mkdir(parents=True, exist_ok=True)
     env["CODEX_API_KEY"] = os.environ["OPENAI_API_KEY"]
     env["OPENAI_API_KEY"] = os.environ["OPENAI_API_KEY"]
 
+    # The plugin's own MCP entry is named `locus` and uses OAuth, which cannot complete headlessly.
+    # In mcp+skill the bearer-auth entry takes that same name, which replaces the plugin's entry
+    # (verified: no AuthRequired error, calls show server "locus"). The plugin is read from the
+    # isolated CODEX_HOME config, so --ignore-user-config is dropped in that arm only.
+    server = "locus" if locus_mode == "mcp+skill" else LOCUS_SERVER
     overrides = ['web_search="live"', 'approval_policy="never"']
     if with_locus:
         env["LOCUS_PRO_API_KEY"] = os.environ["LOCUS_PRO_API_KEY"]
         url = os.environ["LOCUS_PRO_MCP_URL"]
         overrides += [
-            f'mcp_servers.{LOCUS_SERVER}.url="{url}"',
-            f'mcp_servers.{LOCUS_SERVER}.bearer_token_env_var="LOCUS_PRO_API_KEY"',
-            f"mcp_servers.{LOCUS_SERVER}.tool_timeout_sec=300",
-            f'mcp_servers.{LOCUS_SERVER}.default_tools_approval_mode="approve"',
+            f'mcp_servers.{server}.url="{url}"',
+            f'mcp_servers.{server}.bearer_token_env_var="LOCUS_PRO_API_KEY"',
+            f"mcp_servers.{server}.tool_timeout_sec=300",
+            f'mcp_servers.{server}.default_tools_approval_mode="approve"',
             # Without required=true codex exec may start the first turn before the HTTP MCP
             # handshake finishes, and the model then sees no locus tools (observed in the spike).
-            f"mcp_servers.{LOCUS_SERVER}.required=true",
+            f"mcp_servers.{server}.required=true",
         ]
+    if locus_mode == "mcp+skill":
+        _ensure_codex_plugin(env)
     last_msg = trace.with_suffix(".last.txt")
     cmd = [str(NODE_BIN / "codex"), "exec", "--json", "--skip-git-repo-check", "--ephemeral",
-           "--ignore-user-config", "--ignore-rules", "-s", "read-only", "-m", model,
+           *([] if locus_mode == "mcp+skill" else ["--ignore-user-config"]),
+           "--ignore-rules", "-s", "read-only", "-m", model,
            "-o", str(last_msg)]
     for o in overrides:
         cmd += ["-c", o]
@@ -207,8 +267,21 @@ def _codex(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
 # --------------------------------------------------------------------------- gemini cli
 
 
-def _gemini(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
-    home, work, trace = _fresh_dirs("gemini-cli", with_locus)
+def _ensure_gemini_skills(env: dict[str, str]) -> None:
+    """Gemini CLI has native Agent Skills (`gemini skills install <path>`). Locus docs route
+    skill-capable clients without a plugin to the three released skills (`npx skills add
+    locus-technologies/locus-pro-plugin`); this is the same install, done with Gemini's own
+    installer into the isolated GEMINI_CLI_HOME (user scope)."""
+    root = Path(env["GEMINI_CLI_HOME"]) / ".gemini" / "skills"
+    for skill in LOCUS_SKILLS:
+        if not (root / skill / "SKILL.md").exists():
+            _install_quiet([str(NODE_BIN / "gemini"), "skills", "install", str(LOCUS_PLUGIN_DIR / "skills" / skill),
+                            "--scope", "user", "--consent"], env)
+
+
+def _gemini(prompt: str, locus_mode: str, model: str, timeout_s: int) -> dict:
+    with_locus = locus_mode != "none"
+    home, work, trace = _fresh_dirs("gemini-cli", locus_mode)
     env = _base_env(home)
     env["GEMINI_CLI_HOME"] = str(home)
     env["GEMINI_API_KEY"] = os.environ["GOOGLE_API_KEY"]
@@ -232,6 +305,8 @@ def _gemini(prompt: str, with_locus: bool, model: str, timeout_s: int) -> dict:
     gdir = home / ".gemini"
     gdir.mkdir(parents=True, exist_ok=True)
     (gdir / "settings.json").write_text(json.dumps(settings, indent=2))
+    if locus_mode == "mcp+skill":
+        _ensure_gemini_skills(env)
 
     cmd = [str(NODE_BIN / "gemini"), "-p", prompt, "-o", "stream-json", "-m", model,
            "--approval-mode", "yolo", "--skip-trust"]
@@ -274,18 +349,30 @@ HARNESSES = {"claude-code": _claude, "codex": _codex, "gemini-cli": _gemini}
 ALIASES = {"claude": "claude-code", "gemini": "gemini-cli"}
 
 
-def run_harness(name: str, prompt: str, with_locus: bool, model: str | None, timeout_s: int = 900) -> dict:
+def resolve_locus_mode(with_locus: bool, locus_mode: str | None) -> str:
+    """locus_mode wins when given; otherwise with_locus=True means MCP only (the spike arm)."""
+    mode = locus_mode or ("mcp" if with_locus else "none")
+    if mode not in LOCUS_MODES:
+        raise ValueError(f"locus_mode must be one of {LOCUS_MODES}, got {mode!r}")
+    return mode
+
+
+def run_harness(name: str, prompt: str, with_locus: bool, model: str | None, timeout_s: int = 900,
+                locus_mode: str | None = None) -> dict:
     name = ALIASES.get(name, name)
     if name not in HARNESSES:
         raise ValueError(f"unknown harness {name!r}; expected one of {sorted(HARNESSES)}")
     load_secrets()
-    return HARNESSES[name](prompt, with_locus, model or DEFAULT_MODELS[name], timeout_s)
+    mode = resolve_locus_mode(with_locus, locus_mode)
+    out = HARNESSES[name](prompt, mode, model or DEFAULT_MODELS[name], timeout_s)
+    out["locus_mode"] = mode
+    return out
 
 
 def locus_calls(result: dict) -> list[dict]:
     """Tool calls that went to the Locus Pro MCP server."""
-    # claude/codex: mcp__locus-pro__<tool>; gemini: mcp_locus-pro_<tool>
-    return [c for c in result["tool_calls"] if LOCUS_SERVER in (c.get("name") or "")]
+    # claude/codex: mcp__locus-pro__<tool> (codex mcp+skill: mcp__locus__<tool>); gemini: mcp_locus-pro_<tool>
+    return [c for c in result["tool_calls"] if (c.get("name") or "").startswith(("mcp__locus", "mcp_locus"))]
 
 
 if __name__ == "__main__":
@@ -295,8 +382,9 @@ if __name__ == "__main__":
     ap.add_argument("name")
     ap.add_argument("prompt")
     ap.add_argument("--locus", action="store_true")
+    ap.add_argument("--locus-mode", choices=LOCUS_MODES)
     ap.add_argument("--model")
     ap.add_argument("--timeout", type=int, default=900)
     a = ap.parse_args()
-    r = run_harness(a.name, a.prompt, a.locus, a.model, a.timeout)
+    r = run_harness(a.name, a.prompt, a.locus, a.model, a.timeout, locus_mode=a.locus_mode)
     print(json.dumps(r, indent=2, default=str))

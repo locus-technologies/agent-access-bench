@@ -7,6 +7,10 @@ Arms:
   with_locus=True   the same harness plus the Locus Pro MCP server (streamable HTTP,
                     bearer auth). Built-in tools stay on, so the arm measures what
                     adding Locus does, not a tool swap.
+  locus_mode        "none" | "mcp" | "mcp+skill" refines with_locus; "mcp+skill" also
+                    installs the official Locus skills (OpenClaw: `openclaw skills
+                    install`; Hermes: <HERMES_HOME>/skills; Agents SDK: skill text in
+                    the agent instructions). See docs/harness-track.md.
   builtin_web=False (optional) drops the built-in web search/fetch tools, e.g. a
                     Locus-only arm. Shell/exec tools stay, as each harness ships them.
 
@@ -54,6 +58,9 @@ DEFAULT_MODELS = {
 }
 OPENAI_AGENTS_FALLBACK_MODEL = "gpt-5.5"
 LOCUS_SERVER_NAME = "locus-pro"
+LOCUS_MODES = ("none", "mcp", "mcp+skill")
+LOCUS_PLUGIN_DIR = ROOT / "harnesses" / "locus-pro-plugin"  # read-only clone of the official plugin repo
+LOCUS_SKILLS = ("locus", "locus-setup", "locus-workflows")
 LOCUS_ENV = ("LOCUS_PRO_MCP_URL", "LOCUS_PRO_API_KEY")
 PASSTHROUGH_ENV = ("LANG", "LC_ALL", "TMPDIR", "USER", "LOGNAME", "SHELL")
 
@@ -106,9 +113,9 @@ def _run_cli(cmd: list[str], env: dict[str, str], cwd: Path, timeout_s: int) -> 
         return 124, out, err + f"\n[harnesses_extra] killed after {timeout_s}s timeout"
 
 
-def _trace_dir(name: str, with_locus: bool, builtin_web: bool) -> Path:
+def _trace_dir(name: str, locus_mode: str, builtin_web: bool) -> Path:
     stamp = time.strftime("%Y%m%dT%H%M%S")
-    arm = ("locus" if with_locus else "base") + ("" if builtin_web else "-noweb")
+    arm = {"none": "base", "mcp": "locus", "mcp+skill": "locus-skill"}[locus_mode] + ("" if builtin_web else "-noweb")
     d = TRACE_ROOT / name / f"{stamp}_{arm}_{uuid.uuid4().hex[:6]}"
     d.mkdir(parents=True, exist_ok=True)
     return d
@@ -155,8 +162,23 @@ def _sqlite_rows(db: Path, sql: str) -> list[dict]:
         con.close()
 
 
-def _run_openclaw(prompt: str, with_locus: bool, model: str | None, timeout_s: int, trace: Path,
+def _install_openclaw_skills(env: dict[str, str], cfg_path: Path, run_state: Path) -> None:
+    """The Locus OpenClaw host guide installs each released skill tree with
+    `openclaw skills install <absolute-skill-dir> --force`. Each run has a fresh state dir,
+    so the install runs per run, into that run's agent workspace (<state>/workspace/skills)."""
+    ienv = {**env, "OPENCLAW_STATE_DIR": str(run_state), "OPENCLAW_CONFIG_PATH": str(cfg_path)}
+    for skill in LOCUS_SKILLS:
+        proc = subprocess.run(
+            [str(NODE24_BIN / "node"), str(OPENCLAW_ENTRY), "skills", "install",
+             str(LOCUS_PLUGIN_DIR / "skills" / skill), "--force"],
+            env=ienv, cwd=run_state, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=120)
+        if proc.returncode != 0:
+            raise RuntimeError(f"openclaw skills install {skill} failed: {proc.stderr[-400:]}")
+
+
+def _run_openclaw(prompt: str, locus_mode: str, model: str | None, timeout_s: int, trace: Path,
                   builtin_web: bool) -> dict:
+    with_locus = locus_mode != "none"
     home = HARNESS_HOME / "openclaw"
     run_state = home / "runs" / trace.name
     work = home / "work"
@@ -175,6 +197,12 @@ def _run_openclaw(prompt: str, with_locus: bool, model: str | None, timeout_s: i
         "OPENCLAW_STATE_DIR": str(home / "state"),
         "OPENCLAW_CONFIG_PATH": str(cfg_path),
     })
+    if locus_mode == "mcp+skill":
+        _install_openclaw_skills(env, cfg_path, run_state)
+        # `agent exec --cwd` sets the agent workspace, and workspace skills load from
+        # <workspace>/skills. The shared work dir would leak skills into other arms, so this
+        # arm runs in the run's own workspace, where `skills install` put them.
+        work = run_state / "workspace"
     cmd = [
         str(NODE24_BIN / "node"), str(OPENCLAW_ENTRY), "agent", "exec",
         "--config", str(cfg_path), "--state-dir", str(run_state), "--json",
@@ -240,13 +268,29 @@ def _hermes_config(with_locus: bool, model: str, provider: str, builtin_web: boo
     return "\n".join(lines) + "\n"
 
 
-def _run_hermes(prompt: str, with_locus: bool, model: str | None, timeout_s: int, trace: Path,
+def _install_hermes_skills(hermes_home: Path) -> None:
+    """Locus Hermes host guide: activate each released tree at <HERMES_HOME>/skills/<skill>,
+    as a complete copy. The plugin repo ships the Hermes build of the trees (descriptions
+    trimmed to Hermes's 60-char limit) under agents/hermes/skills."""
+    import shutil
+
+    for skill in LOCUS_SKILLS:
+        dest = hermes_home / "skills" / skill
+        if not (dest / "SKILL.md").exists():
+            shutil.copytree(LOCUS_PLUGIN_DIR / "agents" / "hermes" / "skills" / skill, dest, dirs_exist_ok=True)
+
+
+def _run_hermes(prompt: str, locus_mode: str, model: str | None, timeout_s: int, trace: Path,
                 builtin_web: bool) -> dict:
-    home = HARNESS_HOME / f"hermes-{'locus' if with_locus else 'base'}"
+    with_locus = locus_mode != "none"
+    suffix = {"none": "base", "mcp": "locus", "mcp+skill": "locus-skill"}[locus_mode]
+    home = HARNESS_HOME / f"hermes-{suffix}"
     hermes_home = home / ".hermes"
     work = home / "work"
     for d in (hermes_home, work):
         d.mkdir(parents=True, exist_ok=True)
+    if locus_mode == "mcp+skill":
+        _install_hermes_skills(hermes_home)
 
     model = model or DEFAULT_MODELS["hermes"]
     provider = "anthropic"
@@ -311,8 +355,22 @@ def _item_to_call(raw: Any, locus_names: set[str]) -> dict:
     return {"name": kind, "args": None, "locus": False}
 
 
-async def _openai_agents_async(prompt: str, with_locus: bool, model: str, timeout_s: int,
+BASE_INSTRUCTIONS = "You are a helpful research assistant. Use your tools to answer accurately."
+
+
+def locus_skill_text() -> str:
+    """The official `locus` operating skill, frontmatter stripped. The plain Agents SDK Agent has
+    no skills mechanism (the SDK's Skills capability belongs to SandboxAgent), so mcp+skill
+    appends this text to the agent's instructions, the SDK's system prompt."""
+    text = (LOCUS_PLUGIN_DIR / "skills" / "locus" / "SKILL.md").read_text()
+    if text.startswith("---"):
+        text = text.split("---", 2)[2]
+    return text.strip()
+
+
+async def _openai_agents_async(prompt: str, locus_mode: str, model: str, timeout_s: int,
                                builtin_web: bool) -> tuple[Any, str, set[str]]:
+    with_locus = locus_mode != "none"
     from agents import (
         Agent,
         OpenAIProvider,
@@ -345,12 +403,15 @@ async def _openai_agents_async(prompt: str, with_locus: bool, model: str, timeou
     # A fresh client per run: the SDK's shared default client binds its connection
     # pool to the first event loop and fails with "Event loop is closed" on reuse.
     run_config = RunConfig(model_provider=OpenAIProvider(openai_client=AsyncOpenAI()))
+    instructions = BASE_INSTRUCTIONS
+    if locus_mode == "mcp+skill":
+        instructions += "\n\n" + locus_skill_text()
     try:
         last_err: Exception | None = None
         for m in dict.fromkeys([model, OPENAI_AGENTS_FALLBACK_MODEL]):
             agent = Agent(
                 name="assistant",
-                instructions="You are a helpful research assistant. Use your tools to answer accurately.",
+                instructions=instructions,
                 model=m,
                 tools=[WebSearchTool()] if builtin_web else [],
                 mcp_servers=servers,
@@ -369,12 +430,12 @@ async def _openai_agents_async(prompt: str, with_locus: bool, model: str, timeou
             await s.cleanup()
 
 
-def _run_openai_agents(prompt: str, with_locus: bool, model: str | None, timeout_s: int, trace: Path,
+def _run_openai_agents(prompt: str, locus_mode: str, model: str | None, timeout_s: int, trace: Path,
                        builtin_web: bool) -> dict:
     model = model or DEFAULT_MODELS["openai-agents"]
 
     def _go():
-        return asyncio.run(_openai_agents_async(prompt, with_locus, model, timeout_s, builtin_web))
+        return asyncio.run(_openai_agents_async(prompt, locus_mode, model, timeout_s, builtin_web))
 
     try:
         asyncio.get_running_loop()
@@ -412,20 +473,26 @@ _RUNNERS = {"openclaw": _run_openclaw, "hermes": _run_hermes, "openai-agents": _
 
 
 def run_harness(name: str, prompt: str, with_locus: bool, model: str | None = None, timeout_s: int = 900,
-                builtin_web: bool = True) -> dict:
+                builtin_web: bool = True, locus_mode: str | None = None) -> dict:
+    """locus_mode: "none" | "mcp" | "mcp+skill"; when omitted, with_locus picks "mcp" or "none"."""
     if name not in _RUNNERS:
         raise ValueError(f"unknown harness {name!r}; expected one of {sorted(_RUNNERS)}")
+    mode = locus_mode or ("mcp" if with_locus else "none")
+    if mode not in LOCUS_MODES:
+        raise ValueError(f"locus_mode must be one of {LOCUS_MODES}, got {mode!r}")
+    with_locus = mode != "none"
     _ensure_secrets()
-    trace = _trace_dir(name, with_locus, builtin_web)
+    trace = _trace_dir(name, mode, builtin_web)
     t0 = time.monotonic()
     try:
-        out = _RUNNERS[name](prompt, with_locus, model, timeout_s, trace, builtin_web)
+        out = _RUNNERS[name](prompt, mode, model, timeout_s, trace, builtin_web)
     except Exception as e:  # report, don't crash a sweep
         out = {"final_answer": "", "tool_calls": [], "raw_trace_path": str(trace), "exit_code": 1,
                "usage": {}, "error": f"{type(e).__name__}: {e}"}
     out["duration_s"] = round(time.monotonic() - t0, 2)
     out["harness"] = name
     out["with_locus"] = with_locus
+    out["locus_mode"] = mode
     out["builtin_web"] = builtin_web
     out["locus_tool_calls"] = sum(1 for c in out["tool_calls"] if c.get("locus"))
     _write_json(trace / "result.json", out)
@@ -442,6 +509,8 @@ if __name__ == "__main__":
     p.add_argument("--model")
     p.add_argument("--timeout", type=int, default=900)
     p.add_argument("--no-builtin-web", action="store_true")
+    p.add_argument("--locus-mode", choices=LOCUS_MODES)
     a = p.parse_args()
-    r = run_harness(a.name, a.prompt, a.locus, a.model, a.timeout, builtin_web=not a.no_builtin_web)
+    r = run_harness(a.name, a.prompt, a.locus, a.model, a.timeout, builtin_web=not a.no_builtin_web,
+                    locus_mode=a.locus_mode)
     print(json.dumps(r, indent=2, default=str))

@@ -1,0 +1,73 @@
+{
+ "budget_usd": 0.05,
+ "slug": "hunter/email-verifier",
+ "calls": [
+  {
+   "i": 0,
+   "charged_usd": 0.008,
+   "error": null,
+   "refused": false,
+   "text_head": "{\"data\":{\"data\":{\"_deprecation_notice\":\"Using result is deprecated, use status instead\",\"accept_all\":false,\"block\":false,\"disposable\":false,\"email\":\"support@stripe.com\",\"gibberish\":false,\"mx_records\":"
+  },
+  {
+   "i": 1,
+   "charged_usd": 0.008,
+   "error": null,
+   "refused": false,
+   "text_head": "{\"data\":{\"data\":{\"_deprecation_notice\":\"Using result is deprecated, use status instead\",\"accept_all\":false,\"block\":false,\"disposable\":false,\"email\":\"support@stripe.com\",\"gibberish\":false,\"mx_records\":"
+  },
+  {
+   "i": 2,
+   "charged_usd": 0.008,
+   "error": null,
+   "refused": false,
+   "text_head": "{\"data\":{\"data\":{\"_deprecation_notice\":\"Using result is deprecated, use status instead\",\"accept_all\":false,\"block\":false,\"disposable\":false,\"email\":\"support@stripe.com\",\"gibberish\":false,\"mx_records\":"
+  },
+  {
+   "i": 3,
+   "charged_usd": 0.008,
+   "error": null,
+   "refused": false,
+   "text_head": "{\"data\":{\"data\":{\"_deprecation_notice\":\"Using result is deprecated, use status instead\",\"accept_all\":false,\"block\":false,\"disposable\":false,\"email\":\"support@stripe.com\",\"gibberish\":false,\"mx_records\":"
+  },
+  {
+   "i": 4,
+   "charged_usd": 0.008,
+   "error": null,
+   "refused": false,
+   "text_head": "{\"data\":{\"data\":{\"_deprecation_notice\":\"Using result is deprecated, use status instead\",\"accept_all\":false,\"block\":false,\"disposable\":false,\"email\":\"support@stripe.com\",\"gibberish\":false,\"mx_records\":"
+  },
+  {
+   "i": 5,
+   "charged_usd": 0.008,
+   "error": null,
+   "refused": false,
+   "text_head": "{\"data\":{\"data\":{\"_deprecation_notice\":\"Using result is deprecated, use status instead\",\"accept_all\":false,\"block\":false,\"disposable\":false,\"email\":\"support@stripe.com\",\"gibberish\":false,\"mx_records\":"
+  },
+  {
+   "i": 6,
+   "charged_usd": 0.0,
+   "error": "ToolError: {\n  \"error\": \"Insufficient credits\",\n  \"message\": \"This call costs 8 credits but the account has 2.\",\n  \"requiredCredits\": \"8\",\n  \"availableCredits\": \"2\",\n  \"docsUrl\": \"https://docs.paywithlocus.com/locus-pro\",\n  \"apiCallId\": \"8a459e48-65c4-4f8c-b2f0-561bb3c1caf6\",\n  \"hint\": \"Insufficient credits. Top up in the Locus Pro dashboard, then retry.\"\n}",
+   "refused": true,
+   "text_head": null
+  }
+ ],
+ "ledger": {
+  "task_id": "captest",
+  "arm": "C",
+  "budget_usd": "0.05",
+  "external_user_id": "bench-spend-captest-C-1791070316-5247be3d",
+  "connection_id": "eba47766-e8c4-4486-b63a-48bb1fb20e90",
+  "key_prefix": "lcac_prod_7kK...2WUWxE",
+  "mcp_url": "https://api.paywithlocus.com/api/credits/mcp",
+  "allocated_usd": "0.05",
+  "final_balance_usd": "0.002",
+  "spent_usd": "0.048",
+  "returned_usd": "0.002",
+  "revoked": true,
+  "locus_commit": "05a699e6b3ed191893bfc15200eef3e7e93911fe",
+  "started_at": 1791070316.902192,
+  "ended_at": 1791070345.766062,
+  "cleanup_errors": []
+ }
+}

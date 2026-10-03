@@ -8,3 +8,4 @@ results/raw/
 .harness-home/
 harnesses/node/node_modules/
 harnesses/hermes/
+harnesses/locus-pro-plugin/

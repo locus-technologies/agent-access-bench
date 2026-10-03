@@ -23,6 +23,8 @@ load_secrets()
 TASK_DIR = Path(__file__).resolve().parent.parent / "tasks"
 MESSAGE_LIMIT = 30
 TIME_LIMIT_S = 900
+# Each arm gets the official instructions of the servers it mounts, as MCP clients do.
+SERVERS_FOR_ARM = {"C": ["locus-pro"], "D": ["apollo", "hunter", "firecrawl", "exa", "tavily", "prospeo"]}
 
 
 def load_tasks(batteries: list[str], d_only: bool = False, harness_only: bool = False) -> list[BenchTask]:
@@ -44,9 +46,7 @@ def access_bench(arm: str = "B", batteries: str = "pilot", d_only: bool = False,
         for t in tasks
     ])
     tools = tools_for(arm)
-    # Each arm gets the official instructions of the servers it mounts, as MCP clients do.
-    servers = {"C": ["locus-pro"], "D": ["apollo", "hunter", "firecrawl", "exa", "tavily", "prospeo"]}.get(arm, [])
-    prompt = SYSTEM_PROMPT + instructions_for(servers)
+    prompt = SYSTEM_PROMPT + instructions_for(SERVERS_FOR_ARM.get(arm, []))
     solver = (
         [system_message(SYSTEM_PROMPT), generate()]
         if arm == "A"

@@ -15,9 +15,9 @@ SYSTEM_PROMPT = (
 
 FETCH_MAX_CHARS = 20_000
 
-# The stock search key is shared with production traffic: cap concurrency for the whole
+# The stock search uses a dedicated benchmark key (1,000 req/min). Cap concurrency for the whole
 # process (all arms and models run in one process) and back off on 429.
-SEARCH_CONCURRENCY = 2
+SEARCH_CONCURRENCY = 8
 _search_gate = asyncio.Semaphore(SEARCH_CONCURRENCY)
 
 
