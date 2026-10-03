@@ -171,7 +171,7 @@ def _install_openclaw_skills(env: dict[str, str], cfg_path: Path, run_state: Pat
         proc = subprocess.run(
             [str(NODE24_BIN / "node"), str(OPENCLAW_ENTRY), "skills", "install",
              str(LOCUS_PLUGIN_DIR / "skills" / skill), "--force"],
-            env=ienv, cwd=run_state, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=120)
+            env=ienv, cwd=run_state, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=120, check=False)
         if proc.returncode != 0:
             raise RuntimeError(f"openclaw skills install {skill} failed: {proc.stderr[-400:]}")
 

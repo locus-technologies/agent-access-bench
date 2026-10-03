@@ -95,7 +95,7 @@ def _run(cmd: list[str], env: dict[str, str], cwd: Path, trace_path: Path, timeo
 
 
 def _install_quiet(cmd: list[str], env: dict[str, str]) -> None:
-    proc = subprocess.run(cmd, env=env, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=300)
+    proc = subprocess.run(cmd, env=env, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=300, check=False)
     if proc.returncode != 0:
         raise RuntimeError(f"install step failed: {' '.join(cmd[:4])}: {proc.stderr[-500:]}")
 

@@ -54,6 +54,16 @@ secondary arm, C-mcp-only, mounts the MCP server alone. Spikes on 2026-10-03 sho
 harnesses ignore an MCP server that comes without instructions, and that gap is reported as
 its own finding.
 
+Skill install per harness (details in `docs/harness-track.md`):
+- Claude Code and Codex: the official Locus plugin.
+- Gemini CLI: `gemini skills install`.
+- OpenClaw and Hermes: the skill folders named in the Locus host guides.
+- OpenAI Agents SDK: no skills mechanism, so the `locus` skill text goes in the system prompt.
+  This is a known asymmetry: that harness sees the full skill from turn one.
+
+Both Locus arms authenticate with a tenant key instead of browser OAuth, because the runs are
+headless.
+
 ### Stock search
 
 B's web search is Tavily, called directly with a global concurrency cap of 2 and backoff on

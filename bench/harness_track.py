@@ -116,7 +116,7 @@ def skill_loads(tool_calls: list[dict]) -> int:
     n = 0
     for c in tool_calls:
         name = (c.get("name") or "").lower()
-        if is_locus_call(c.get("name")):
+        if c.get("locus") or is_locus_call(c.get("name")):
             continue
         args = json.dumps(c.get("args"), default=str).lower()
         if ("skill" in name and "locus" in args) or ("locus" in args and "skill.md" in args):
@@ -145,8 +145,10 @@ def one_run(harness: str, arm: str, task: Task, epoch: int, timeout_s: int) -> d
         res = {"final_answer": "", "tool_calls": [], "raw_trace_path": None, "exit_code": 1,
                "error": f"{type(e).__name__}: {e}", "traceback": traceback.format_exc()[-1500:]}
     model = agent_model_id(harness, res.get("model") or default_model(harness))
-    names = [c.get("name") or "" for c in res.get("tool_calls", [])]
-    locus_names = [n for n in names if is_locus_call(n)]
+    calls = res.get("tool_calls", [])
+    names = [c.get("name") or "" for c in calls]
+    # harnesses_extra marks Locus calls itself ("locus": bool); the Agents SDK uses bare MCP names.
+    locus_names = [c.get("name") or "" for c in calls if c.get("locus") or is_locus_call(c.get("name"))]
     answer = res.get("final_answer") or ""
     try:
         ok, detail = asyncio.run(grade(task, answer, model)) if answer else (False, {"empty_answer": True})
