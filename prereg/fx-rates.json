@@ -1,0 +1,16 @@
+{
+  "description": "Currency conversion for the travel battery's cheapest_within rule. Agents state fares in the currency their source showed (e.g. EUR for Lisbon-Funchal), so prices are converted to USD before taking the cross-arm minimum. ECB euro foreign exchange reference rates; usd_per_unit derived as USD-per-EUR / CUR-per-EUR.",
+  "source": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+  "rate_date": "2026-10-02",
+  "retrieved": "2026-10-03",
+  "eur_reference": {"USD": 1.1225, "GBP": 0.85033, "CHF": 0.9279, "CAD": 1.5984, "AUD": 1.6176, "JPY": 176.99},
+  "usd_per_unit": {
+    "USD": 1.0,
+    "EUR": 1.1225,
+    "GBP": 1.320076,
+    "CHF": 1.209721,
+    "CAD": 0.702265,
+    "AUD": 0.693929,
+    "JPY": 0.006342
+  }
+}

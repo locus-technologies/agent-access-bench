@@ -24,25 +24,36 @@ def usd_charged(msg) -> float:
         return 0.0
 
 
-def rows(log_dir: str):
+def sample_row(log, s) -> dict:
+    """One run (sample x epoch) of one eval log. Missing scores (errored samples) count as 0."""
+    score = next(iter(s.scores.values())) if s.scores else None
+    calls = [tc.function for m in s.messages if m.role == "assistant" for tc in (m.tool_calls or [])]
+    spend = sum(usd_charged(m) for m in s.messages if m.role == "tool" and m.function in LOCUS_TOOLS)
+    explanation = (score.explanation or "") if score else ""
+    return {
+        "model": log.eval.model, "arm": log.eval.task_args.get("arm"), "task": s.id, "epoch": s.epoch,
+        "score": score.value if score else 0,
+        "grader_error": "grader_error" in explanation,
+        "explanation": explanation[:160],
+        "calls": calls, "locus_calls": sum(c in LOCUS_TOOLS for c in calls), "locus_usd": spend,
+        "limit": s.limit.type if s.limit else None, "error": (s.error.message[:120] if s.error else None),
+        "tokens": sum(u.total_tokens for u in s.model_usage.values()),
+    }
+
+
+def logs(log_dir: str):
     for path in sorted(glob.glob(f"{log_dir}/*.eval")):
         log = read_eval_log(path)
         if log.status != "success" or not log.samples:
             print("SKIP", path, log.status, (log.error.message[:200] if log.error else ""))
             continue
-        arm = log.eval.task_args.get("arm")
+        yield path, log
+
+
+def rows(log_dir: str):
+    for _, log in logs(log_dir):
         for s in log.samples:
-            score = next(iter(s.scores.values()))
-            calls = [tc.function for m in s.messages if m.role == "assistant" for tc in (m.tool_calls or [])]
-            spend = sum(usd_charged(m) for m in s.messages if m.role == "tool" and m.function in LOCUS_TOOLS)
-            yield {
-                "model": log.eval.model, "arm": arm, "task": s.id, "epoch": s.epoch, "score": score.value,
-                "grader_error": "grader_error" in (score.explanation or ""),
-                "explanation": (score.explanation or "")[:160],
-                "calls": calls, "locus_calls": sum(c in LOCUS_TOOLS for c in calls), "locus_usd": spend,
-                "limit": s.limit.type if s.limit else None, "error": (s.error.message[:120] if s.error else None),
-                "tokens": sum(u.total_tokens for u in s.model_usage.values()),
-            }
+            yield sample_row(log, s)
 
 
 if __name__ == "__main__":

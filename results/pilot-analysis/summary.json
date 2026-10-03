@@ -1,0 +1,888 @@
+{
+ "settings": {
+  "seed_string": "agent-access-bench-v1",
+  "seed_int": 1056477527888400723,
+  "n_boot": 10000,
+  "ci": 0.95,
+  "include_pilot": true,
+  "h1_batteries": [
+   "gtm",
+   "paiddata",
+   "multistep",
+   "travel",
+   "structured-hostile",
+   "pilot"
+  ],
+  "flight_window": "all runs in this invocation"
+ },
+ "counts": {
+  "runs": 80,
+  "runs_excluded_pilot": 0,
+  "by_scope": {
+   "h1": 80,
+   "structured-public": 0,
+   "control": 0,
+   "d_subset": 72,
+   "spend": 0
+  },
+  "models": [
+   "anthropic/claude-sonnet-5-5",
+   "openai/gpt-6.1-sol"
+  ],
+  "arms": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ]
+ },
+ "H1": {
+  "contrast": "C-B",
+  "pooled": {
+   "estimate": 0.0,
+   "ci_low": -0.3,
+   "ci_high": 0.3,
+   "n_tasks": 10,
+   "n_models": 2,
+   "n_boot": 10000,
+   "share_boot_le_0": 0.6435
+  },
+  "per_model": {
+   "anthropic/claude-sonnet-5-5": {
+    "estimate": 0.0,
+    "ci_low": -0.3,
+    "ci_high": 0.3,
+    "n_tasks": 10,
+    "n_models": 1,
+    "n_boot": 10000,
+    "share_boot_le_0": 0.6435
+   },
+   "openai/gpt-6.1-sol": {
+    "estimate": 0.0,
+    "ci_low": -0.3,
+    "ci_high": 0.3,
+    "n_tasks": 10,
+    "n_models": 1,
+    "n_boot": 10000,
+    "share_boot_le_0": 0.6435
+   }
+  },
+  "per_battery": {
+   "pilot": {
+    "estimate": 0.0,
+    "ci_low": -0.3,
+    "ci_high": 0.3,
+    "n_tasks": 10,
+    "n_models": 2,
+    "n_boot": 10000,
+    "share_boot_le_0": 0.6435
+   }
+  },
+  "supported": false,
+  "rule": "pooled C-B 95% CI lower bound > 0"
+ },
+ "H2": {
+  "contrast": "C-B",
+  "pooled": {
+   "estimate": null,
+   "ci_low": null,
+   "ci_high": null,
+   "n_tasks": 0,
+   "n_models": 0
+  },
+  "per_model": {},
+  "supported": null,
+  "rule": "pooled C-B 95% CI lower bound > -5 pp"
+ },
+ "H3": {
+  "contrast": "C-D",
+  "pooled": {
+   "estimate": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n_tasks": 9,
+   "n_models": 2,
+   "n_boot": 10000,
+   "share_boot_le_0": 1.0
+  },
+  "per_model": {
+   "anthropic/claude-sonnet-5-5": {
+    "estimate": 0.0,
+    "ci_low": 0.0,
+    "ci_high": 0.0,
+    "n_tasks": 9,
+    "n_models": 1,
+    "n_boot": 10000,
+    "share_boot_le_0": 1.0
+   },
+   "openai/gpt-6.1-sol": {
+    "estimate": 0.0,
+    "ci_low": 0.0,
+    "ci_high": 0.0,
+    "n_tasks": 9,
+    "n_models": 1,
+    "n_boot": 10000,
+    "share_boot_le_0": 1.0
+   }
+  },
+  "supported_success": true,
+  "tool_def_tokens": {
+   "C": 17104,
+   "D": 79648
+  },
+  "supported_tokens": true,
+  "rule": "pooled C-D 95% CI lower bound > -5 pp and C tool-definition tokens < D"
+ },
+ "structured_public": {
+  "contrast": "C-B",
+  "pooled": {
+   "estimate": null,
+   "ci_low": null,
+   "ci_high": null,
+   "n_tasks": 0,
+   "n_models": 0
+  },
+  "per_model": {},
+  "note": "Reported separately; not part of H1."
+ },
+ "H4": {
+  "from_logs": {},
+  "from_ledger": {
+   "C": {
+    "n": 1,
+    "breaches": 0,
+    "spent_usd_total": 0.0605,
+    "budget_usd_total": 3.0,
+    "not_revoked": 0,
+    "cleanup_errors": 0,
+    "commits": [
+     "05a699e6b3ed191893bfc15200eef3e7e93911fe"
+    ]
+   }
+  },
+  "note": "Arm C spend of record is the Locus ledger (allocated minus settled end-user balance). Arm D spend is ESTIMATED at vendor list prices. Arm B has no paid tools."
+ },
+ "cells": {
+  "h1|anthropic/claude-sonnet-5-5|A": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "A",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 2,
+   "success_rate": 0.2,
+   "wilson_low": 0.05668215145437519,
+   "wilson_high": 0.5098375284633583,
+   "wall_p50_s": 7.696999999999999,
+   "wall_p95_s": 14.37975,
+   "tool_calls_mean": 0.0,
+   "tool_def_tokens": 0,
+   "model_usd_total": 0.061694,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.061694,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|anthropic/claude-sonnet-5-5|B": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "B",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 9,
+   "success_rate": 0.9,
+   "wilson_low": 0.5958499732047615,
+   "wilson_high": 0.9821237869049271,
+   "wall_p50_s": 28.338,
+   "wall_p95_s": 60.36865,
+   "tool_calls_mean": 4.3,
+   "tool_def_tokens": 763,
+   "model_usd_total": 0.358642,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.358642,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|anthropic/claude-sonnet-5-5|C": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "C",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 9,
+   "success_rate": 0.9,
+   "wilson_low": 0.5958499732047615,
+   "wilson_high": 0.9821237869049271,
+   "wall_p50_s": 38.2935,
+   "wall_p95_s": 75.83659999999999,
+   "tool_calls_mean": 4.2,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 0.457351,
+   "locus_usd_total": 0.0765,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.533851,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|anthropic/claude-sonnet-5-5|D": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "D",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 10,
+   "success_rate": 1.0,
+   "wilson_low": 0.7224672001371107,
+   "wilson_high": 0.9999999999999999,
+   "wall_p50_s": 27.0785,
+   "wall_p95_s": 72.15749999999998,
+   "tool_calls_mean": 3.5,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 1.539113,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.1543,
+   "total_usd": 1.693413,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|openai/gpt-6.1-sol|A": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "A",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 2,
+   "success_rate": 0.2,
+   "wilson_low": 0.05668215145437519,
+   "wilson_high": 0.5098375284633583,
+   "wall_p50_s": 9.446000000000002,
+   "wall_p95_s": 16.1364,
+   "tool_calls_mean": 0.0,
+   "tool_def_tokens": 0,
+   "model_usd_total": 0.02744,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.02744,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|openai/gpt-6.1-sol|B": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "B",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 9,
+   "success_rate": 0.9,
+   "wilson_low": 0.5958499732047615,
+   "wilson_high": 0.9821237869049271,
+   "wall_p50_s": 63.7155,
+   "wall_p95_s": 106.63504999999998,
+   "tool_calls_mean": 7.3,
+   "tool_def_tokens": 763,
+   "model_usd_total": 0.336564,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.336564,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|openai/gpt-6.1-sol|C": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "C",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 9,
+   "success_rate": 0.9,
+   "wilson_low": 0.5958499732047615,
+   "wilson_high": 0.9821237869049271,
+   "wall_p50_s": 29.694,
+   "wall_p95_s": 91.94634999999998,
+   "tool_calls_mean": 5.9,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 0.317409,
+   "locus_usd_total": 0.06425,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.381659,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "h1|openai/gpt-6.1-sol|D": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "D",
+   "n_runs": 10,
+   "n_tasks": 10,
+   "successes": 10,
+   "success_rate": 1.0,
+   "wilson_low": 0.7224672001371107,
+   "wilson_high": 0.9999999999999999,
+   "wall_p50_s": 36.381,
+   "wall_p95_s": 69.26429999999996,
+   "tool_calls_mean": 4.1,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 0.486365,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0983,
+   "total_usd": 0.584665,
+   "vendor_est_lower_bound_runs": 1,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|A": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "A",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 2,
+   "success_rate": 0.2222222222222222,
+   "wilson_low": 0.06322510711784671,
+   "wilson_high": 0.5474110308930111,
+   "wall_p50_s": 7.297,
+   "wall_p95_s": 13.740599999999999,
+   "tool_calls_mean": 0.0,
+   "tool_def_tokens": 0,
+   "model_usd_total": 0.055638,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.055638,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|B": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "B",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 8,
+   "success_rate": 0.8888888888888888,
+   "wilson_low": 0.5650002944233439,
+   "wilson_high": 0.9801091123614551,
+   "wall_p50_s": 27.725,
+   "wall_p95_s": 51.65459999999999,
+   "tool_calls_mean": 2.888888888888889,
+   "tool_def_tokens": 763,
+   "model_usd_total": 0.243297,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.243297,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|C": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "C",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 9,
+   "success_rate": 1.0,
+   "wilson_low": 0.7008549515804559,
+   "wilson_high": 1.0,
+   "wall_p50_s": 36.039,
+   "wall_p95_s": 68.76219999999999,
+   "tool_calls_mean": 3.7777777777777777,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 0.352291,
+   "locus_usd_total": 0.026,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.378291,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|D": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "D",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 9,
+   "success_rate": 1.0,
+   "wilson_low": 0.7008549515804559,
+   "wilson_high": 1.0,
+   "wall_p50_s": 26.402,
+   "wall_p95_s": 51.783599999999986,
+   "tool_calls_mean": 2.888888888888889,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 1.143783,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.1367,
+   "total_usd": 1.280483,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|A": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "A",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 2,
+   "success_rate": 0.2222222222222222,
+   "wilson_low": 0.06322510711784671,
+   "wilson_high": 0.5474110308930111,
+   "wall_p50_s": 8.794,
+   "wall_p95_s": 16.2128,
+   "tool_calls_mean": 0.0,
+   "tool_def_tokens": 0,
+   "model_usd_total": 0.024426,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.024426,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|B": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "B",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 8,
+   "success_rate": 0.8888888888888888,
+   "wilson_low": 0.5650002944233439,
+   "wilson_high": 0.9801091123614551,
+   "wall_p50_s": 60.774,
+   "wall_p95_s": 107.86559999999999,
+   "tool_calls_mean": 6.222222222222222,
+   "tool_def_tokens": 763,
+   "model_usd_total": 0.282569,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.282569,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|C": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "C",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 9,
+   "success_rate": 1.0,
+   "wilson_low": 0.7008549515804559,
+   "wilson_high": 1.0,
+   "wall_p50_s": 29.214,
+   "wall_p95_s": 92.5582,
+   "tool_calls_mean": 6.222222222222222,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 0.287998,
+   "locus_usd_total": 0.039,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 0.326998,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|D": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "D",
+   "n_runs": 9,
+   "n_tasks": 9,
+   "successes": 9,
+   "success_rate": 1.0,
+   "wilson_low": 0.7008549515804559,
+   "wilson_high": 1.0,
+   "wall_p50_s": 34.637,
+   "wall_p95_s": 70.89559999999999,
+   "tool_calls_mean": 4.0,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 0.43398,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0855,
+   "total_usd": 0.51948,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 0,
+   "errors": 0
+  }
+ },
+ "cost_per_success": {
+  "h1|anthropic/claude-sonnet-5-5|A": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "A",
+   "estimate": 0.030847000000000003,
+   "ci_low": 0.013077670000000003,
+   "ci_high": 0.06908035,
+   "boot_zero_success": 1040,
+   "unpriced_runs": 0
+  },
+  "h1|anthropic/claude-sonnet-5-5|B": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "B",
+   "estimate": 0.0398491,
+   "ci_low": 0.0224478295,
+   "ci_high": 0.06634770385416663,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "h1|anthropic/claude-sonnet-5-5|C": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "C",
+   "estimate": 0.059316744444444444,
+   "ci_low": 0.02972275,
+   "ci_high": 0.11818548678571426,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "h1|anthropic/claude-sonnet-5-5|D": {
+   "scope": "h1",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "D",
+   "estimate": 0.16934131000000002,
+   "ci_low": 0.08851217625,
+   "ci_high": 0.25742300625000003,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "h1|openai/gpt-6.1-sol|A": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "A",
+   "estimate": 0.01372,
+   "ci_low": 0.005906389999999999,
+   "ci_high": 0.0313962,
+   "boot_zero_success": 1040,
+   "unpriced_runs": 0
+  },
+  "h1|openai/gpt-6.1-sol|B": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "B",
+   "estimate": 0.03739605555555556,
+   "ci_low": 0.02385843825,
+   "ci_high": 0.057843029062499995,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "h1|openai/gpt-6.1-sol|C": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "C",
+   "estimate": 0.042406544444444444,
+   "ci_low": 0.025844839999999997,
+   "ci_high": 0.06807620642857141,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "h1|openai/gpt-6.1-sol|D": {
+   "scope": "h1",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "D",
+   "estimate": 0.058466529999999996,
+   "ci_low": 0.037653884000000006,
+   "ci_high": 0.08579468999999999,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|A": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "A",
+   "estimate": 0.027819,
+   "ci_low": 0.011930950000000003,
+   "ci_high": 0.06273200000000001,
+   "boot_zero_success": 1053,
+   "unpriced_runs": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|B": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "B",
+   "estimate": 0.030412112499999998,
+   "ci_low": 0.02006722694444445,
+   "ci_high": 0.04761236208333333,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|C": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "C",
+   "estimate": 0.04203233333333334,
+   "ci_low": 0.025879066666666665,
+   "ci_high": 0.06073660527777778,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "d_subset|anthropic/claude-sonnet-5-5|D": {
+   "scope": "d_subset",
+   "model": "anthropic/claude-sonnet-5-5",
+   "arm": "D",
+   "estimate": 0.14227585555555555,
+   "ci_low": 0.07409197750000002,
+   "ci_high": 0.22093009583333337,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|A": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "A",
+   "estimate": 0.012213,
+   "ci_low": 0.005285716666666667,
+   "ci_high": 0.028136900000000003,
+   "boot_zero_success": 1053,
+   "unpriced_runs": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|B": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "B",
+   "estimate": 0.035321125,
+   "ci_low": 0.021751394444444447,
+   "ci_high": 0.05795335812499999,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|C": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "C",
+   "estimate": 0.03633314444444444,
+   "ci_low": 0.022504704722222216,
+   "ci_high": 0.05137640499999998,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  },
+  "d_subset|openai/gpt-6.1-sol|D": {
+   "scope": "d_subset",
+   "model": "openai/gpt-6.1-sol",
+   "arm": "D",
+   "estimate": 0.05772004444444444,
+   "ci_low": 0.035270328333333344,
+   "ci_high": 0.0883696122222222,
+   "boot_zero_success": 0,
+   "unpriced_runs": 0
+  }
+ },
+ "flight_audit": {
+  "pilot-08": {
+   "cheapest_within": 0.1,
+   "min_usd": 66.0,
+   "threshold_usd": 72.6,
+   "n_runs": 8,
+   "raw_pass": 6,
+   "final_pass": 4,
+   "needs_review": 0,
+   "runs": [
+    {
+     "model": "anthropic/claude-sonnet-5-5",
+     "arm": "A",
+     "epoch": 1,
+     "success_raw": 0,
+     "success": 0,
+     "flight_price": null,
+     "flight_currency": null,
+     "flight_price_usd": null,
+     "flight_note": "failed constraint checks"
+    },
+    {
+     "model": "anthropic/claude-sonnet-5-5",
+     "arm": "C",
+     "epoch": 1,
+     "success_raw": 1,
+     "success": 0,
+     "flight_price": 83.0,
+     "flight_currency": "USD",
+     "flight_price_usd": 83.0,
+     "flight_note": "over 1.10 x min"
+    },
+    {
+     "model": "anthropic/claude-sonnet-5-5",
+     "arm": "B",
+     "epoch": 1,
+     "success_raw": 1,
+     "success": 1,
+     "flight_price": 61.99,
+     "flight_currency": "EUR",
+     "flight_price_usd": 69.5838,
+     "flight_note": "within"
+    },
+    {
+     "model": "openai/gpt-6.1-sol",
+     "arm": "A",
+     "epoch": 1,
+     "success_raw": 0,
+     "success": 0,
+     "flight_price": null,
+     "flight_currency": null,
+     "flight_price_usd": null,
+     "flight_note": "failed constraint checks"
+    },
+    {
+     "model": "openai/gpt-6.1-sol",
+     "arm": "B",
+     "epoch": 1,
+     "success_raw": 1,
+     "success": 1,
+     "flight_price": 61.99,
+     "flight_currency": "EUR",
+     "flight_price_usd": 69.5838,
+     "flight_note": "within"
+    },
+    {
+     "model": "anthropic/claude-sonnet-5-5",
+     "arm": "D",
+     "epoch": 1,
+     "success_raw": 1,
+     "success": 1,
+     "flight_price": 66.0,
+     "flight_currency": "USD",
+     "flight_price_usd": 66.0,
+     "flight_note": "within"
+    },
+    {
+     "model": "openai/gpt-6.1-sol",
+     "arm": "C",
+     "epoch": 1,
+     "success_raw": 1,
+     "success": 0,
+     "flight_price": 83.0,
+     "flight_currency": "USD",
+     "flight_price_usd": 83.0,
+     "flight_note": "over 1.10 x min"
+    },
+    {
+     "model": "openai/gpt-6.1-sol",
+     "arm": "D",
+     "epoch": 1,
+     "success_raw": 1,
+     "success": 1,
+     "flight_price": 62.0,
+     "flight_currency": "EUR",
+     "flight_price_usd": 69.595,
+     "flight_note": "within"
+    }
+   ]
+  }
+ },
+ "grading_cost": {
+  "note": "Judge model cost from log-level stats; not part of any arm's cost.",
+  "total_usd": 0.192937,
+  "unpriced_judges": [],
+  "per_log": [
+   {
+    "log": "2026-10-03T23-17-39-00-00_access-bench_5DXWBMzFggSweHhDNvNSQE.eval",
+    "model": "anthropic/claude-sonnet-5-5",
+    "arm": "A",
+    "grading_usd": {
+     "openai/gpt-5.5": 0.049855
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-39-00-00_access-bench_NzcgMoEU2UumhXBcQJffCX.eval",
+    "model": "anthropic/claude-sonnet-5-5",
+    "arm": "C",
+    "grading_usd": {
+     "openai/gpt-5.5": 0.021635
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-39-00-00_access-bench_d6TmyCAfNt2Nj7ku9F6Xou.eval",
+    "model": "anthropic/claude-sonnet-5-5",
+    "arm": "B",
+    "grading_usd": {
+     "openai/gpt-5.5": 0.0231
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-40-00-00_access-bench_6AvwDRp6nxZ9riUH2Vxvi8.eval",
+    "model": "openai/gpt-6.1-sol",
+    "arm": "A",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.023608
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-40-00-00_access-bench_BhZPzP7fwLYgPrty6FeZ6o.eval",
+    "model": "openai/gpt-6.1-sol",
+    "arm": "B",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.015524
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-40-00-00_access-bench_XYdD2nAqtDiG3WWyYDJTzY.eval",
+    "model": "anthropic/claude-sonnet-5-5",
+    "arm": "D",
+    "grading_usd": {
+     "openai/gpt-5.5": 0.024615
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-40-00-00_access-bench_abDjMYGbu5ME8YUFwn2KpY.eval",
+    "model": "openai/gpt-6.1-sol",
+    "arm": "C",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.014986
+    }
+   },
+   {
+    "log": "2026-10-03T23-17-40-00-00_access-bench_oEEF36AztqEU3nTNW7PPyf.eval",
+    "model": "openai/gpt-6.1-sol",
+    "arm": "D",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.019614
+    }
+   }
+  ]
+ },
+ "inputs": {
+  "log_dirs": [
+   "logs/pilot"
+  ],
+  "logs": [
+   "2026-10-03T23-17-39-00-00_access-bench_5DXWBMzFggSweHhDNvNSQE.eval",
+   "2026-10-03T23-17-39-00-00_access-bench_NzcgMoEU2UumhXBcQJffCX.eval",
+   "2026-10-03T23-17-39-00-00_access-bench_d6TmyCAfNt2Nj7ku9F6Xou.eval",
+   "2026-10-03T23-17-40-00-00_access-bench_6AvwDRp6nxZ9riUH2Vxvi8.eval",
+   "2026-10-03T23-17-40-00-00_access-bench_BhZPzP7fwLYgPrty6FeZ6o.eval",
+   "2026-10-03T23-17-40-00-00_access-bench_XYdD2nAqtDiG3WWyYDJTzY.eval",
+   "2026-10-03T23-17-40-00-00_access-bench_abDjMYGbu5ME8YUFwn2KpY.eval",
+   "2026-10-03T23-17-40-00-00_access-bench_oEEF36AztqEU3nTNW7PPyf.eval"
+  ],
+  "prices": "/Users/coledermott/agent-access-bench/prereg/model-prices.json",
+  "fx": "/Users/coledermott/agent-access-bench/prereg/fx-rates.json",
+  "ledger": "/Users/coledermott/agent-access-bench/results/raw/spend-ledger.jsonl",
+  "tool_definition_tokens": "/Users/coledermott/agent-access-bench/results/tool-definition-tokens.json"
+ }
+}
