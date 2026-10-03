@@ -89,15 +89,14 @@ async def grade(task: Task, answer: str, agent_model: str) -> tuple[bool, dict]:
 
     if g.type == "person_email":
         person = next((n for n in g.person_names if contains(answer, n)), None)
-        emails = [e for e in EMAIL_RE.findall(answer) if e.split("@")[1].lower() in {d.lower() for d in g.email_domains}]
-        statuses = {}
-        for e in emails[:3]:
-            statuses[e.split("@")[1]] = statuses.get(e.split("@")[1]) or []
-            statuses[e.split("@")[1]].append(await zerobounce(e) if g.require_deliverable else "skipped")
-        ok_status = {"valid"} | ({"catch-all"} if g.allow_catch_all else set())
-        email_ok = any(s in ok_status or s == "skipped" for ss in statuses.values() for s in ss)
-        # Only domains and verifier statuses are logged, never the address itself.
-        return bool(person) and email_ok, {"person": person, "email_statuses_by_domain": statuses}
+        domains = {d.lower() for d in g.email_domains}
+        # Only the FIRST address the agent gives on an accepted domain counts, so listing
+        # several guesses is not rewarded. Only its domain and status are logged.
+        email = next((e for e in EMAIL_RE.findall(answer) if e.split("@")[1].lower() in domains), None)
+        status = (await zerobounce(email) if g.require_deliverable else "skipped") if email else None
+        ok_status = {"valid", "skipped"} | ({"catch-all"} if g.allow_catch_all else set())
+        detail = {"person": person, "email_domain": email.split("@")[1] if email else None, "email_status": status}
+        return bool(person) and status in ok_status, detail
 
     if g.type == "claims":
         verdicts = await judge_claims(answer, g.claims, agent_model)

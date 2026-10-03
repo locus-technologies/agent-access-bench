@@ -1,6 +1,6 @@
 # Pre-registration: Does the same agent get more done with Locus Pro?
 
-Status: **DRAFT v0.1 (2026-10-03)**. This file is frozen by a tagged commit (`prereg-v1`)
+Status: **DRAFT v0.2 (2026-10-03)**. This file is frozen by a tagged commit (`prereg-v1`)
 before the first arm-C run of the full benchmark. Every change after the freeze is logged in
 `CHANGELOG.md` with its reason.
 
@@ -16,10 +16,10 @@ a known cost? Does the answer hold across models and agent harnesses?
 
 | ID | Statement | Test |
 |---|---|---|
-| H1 (primary) | On the access batteries (GTM, structured data, multi-vendor, travel), success(C) − success(B) > 0 | pooled over core models; paired clustered bootstrap, 95% CI lower bound > 0 |
+| H1 (primary) | On the access batteries (GTM, paid data, multi-step, travel, structured-hostile), success(C) − success(B) > 0 | pooled over core models; paired clustered bootstrap, 95% CI lower bound > 0 |
 | H2 | On the control battery, success(C) − success(B) > −5 points | 95% CI lower bound > −5 |
 | H3 | On the D subset, success(C) ≥ success(D) − 5 points; C uses fewer tool-definition tokens | CI on the difference; token count measured from the tool list sent to the model |
-| H4 | On the spend-safety battery, C never exceeds its budget; D's overspend is measured | count of budget breaches; dollars over budget |
+| H4 | On the spend-safety battery, C never exceeds its budget (each C run gets its own Locus sub-account funded with exactly the stated budget); D's spend is measured from vendor usage and list prices | count of budget breaches; dollars over budget |
 | H5 | The C − B gain is positive in each harness on the harness track | per-harness difference with 95% CI (no pooling) |
 
 H1 is the only confirmatory claim. Everything else is secondary and reported as such.
@@ -40,6 +40,25 @@ Within any comparison, the model, system prompt, turn limit, and task text are i
   own key, the way a developer would do it themselves. Vendors: Apollo, Hunter, Prospeo,
   Firecrawl, Exa, Tavily, E2B. Official MCP servers are used where they exist, otherwise thin
   SDK wrappers. D runs only on the subset of tasks these vendors can serve.
+
+### Tool awareness (applies to C and D)
+
+Real MCP clients pass each server's own `instructions` text to the model. Inspect does not,
+so the core matrix appends each mounted server's official instructions, snapshotted in
+`prereg/server-instructions.json`, to the system prompt. B gets no extra text. Nothing is
+added beyond the vendors' and Locus's own published text.
+
+In the harness track, C means "Locus Pro installed the way the Locus docs say", which is the
+MCP server plus the official Locus skill or plugin where the harness supports skills. A
+secondary arm, C-mcp-only, mounts the MCP server alone. Spikes on 2026-10-03 showed 5 of 6
+harnesses ignore an MCP server that comes without instructions, and that gap is reported as
+its own finding.
+
+### Stock search
+
+B's web search is Tavily, called directly with a global concurrency cap of 2 and backoff on
+429, because the key is shared with production traffic. Search errors go back to the agent as
+text. They never crash a run.
 
 ## 4. Models (core matrix)
 
@@ -65,17 +84,21 @@ the reason is recorded in `docs/harness-spike-*.md`.
 
 ## 6. Tasks
 
-Total: about 70 tasks, frozen before any arm-C run of the full benchmark. The pilot uses 10
+Tasks were written on 2026-10-03 by authors who did not see the Locus catalog. They are frozen before any arm-C run of the full benchmark. The pilot uses 10
 tasks, drawn from a separate pilot pool that is never scored in the final results.
 
 | Battery | n | What success means |
 |---|---|---|
-| GTM research | 15 | right person (hand-verified truth) and a work email on the right domain that an independent verifier marks deliverable |
-| Structured web data | 15 | exact match against a source-of-record snapshot captured within 10 minutes of the run |
+| GTM research | 15 | right person (hand-verified truth) and the FIRST work email the agent gives on the right domain is marked `valid` by ZeroBounce at grade time (listing several guesses earns nothing extra) |
+| Paid data | 12 | keyword volumes, Maps review counts, Amazon price and ratings, X metrics, audio facts; live or static truth from an authoritative source with a stated tolerance |
+| Structured: public (01–11) | 11 | exact match against a source-of-record snapshot captured within 10 minutes of the run. These sources are free and fetchable, so this battery is reported separately and is **not** part of H1 |
+| Structured: hostile (12–15) | 4 | as above, for bot-hostile retail and social pages; part of H1 |
 | Multi-step, multi-vendor | 12 | at least 80% of the rubric claims satisfied (claims fixed per task) |
 | Travel | 8 | the returned offer satisfies every constraint and is confirmed by a same-window fare snapshot |
 | Control | 15 | exact or claims match; plain web search is sufficient |
 | Spend safety | 5 | spend stays within the stated budget (agent outcome is secondary) |
+
+Total: 82 scored tasks plus a 10-task pilot pool.
 
 Task-writing rules:
 - Tasks are written as a real user would phrase them, with no vendor or tool names.
@@ -137,6 +160,9 @@ Task-writing rules:
 - Locus runs the benchmark. Mitigations: the pre-registration, published traces, and the
   invitation to rerun.
 - Live data drifts. Mitigation: truth snapshots taken in the same window.
+- With a strong model, the stock agent (B) already passed 9 of 10 pilot tasks on 2026-10-03.
+  We did not edit tasks in response. Headroom on strong models may be small, and that will
+  be reported as found.
 - Arm C's search over the full catalog was measured on 2026-10-03 at held-out recall@5 of
   7/18 (`results/discovery-prod-2026-10-03.json`). Arm C results therefore include the cost
   of discovery at full scale. This is how the product ships with everything enabled.
