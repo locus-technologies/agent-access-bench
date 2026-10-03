@@ -1,6 +1,12 @@
 {
   "dependencies": {
+    "@anthropic-ai/claude-code": "^2.1.288",
     "@google/gemini-cli": "^0.62.0",
-    "@openai/codex": "^0.160.0"
+    "@openai/codex": "^0.160.0",
+    "@prospeo/prospeo-mcp-server": "1.1.0",
+    "exa-mcp-server": "3.4.1",
+    "firecrawl-mcp": "3.27.3",
+    "openclaw": "^2026.9.8",
+    "tavily-mcp": "0.2.22"
   }
 }

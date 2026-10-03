@@ -1,0 +1,167 @@
+{
+  "model": "claude-sonnet-5-5",
+  "measured_at": "2026-10-03T22:42:21Z",
+  "method": "count_tokens(messages=[hi], tools=arm tools) minus count_tokens without tools",
+  "arms": {
+    "B": {
+      "arm": "B",
+      "tool_count": 3,
+      "total_tokens": 760,
+      "stock_tokens": 760,
+      "stock_tools": [
+        "web_search",
+        "web_fetch",
+        "python"
+      ],
+      "servers": {}
+    },
+    "C": {
+      "arm": "C",
+      "tool_count": 18,
+      "total_tokens": 6914,
+      "stock_tokens": 760,
+      "stock_tools": [
+        "web_search",
+        "web_fetch",
+        "python"
+      ],
+      "servers": {
+        "locus-pro": {
+          "tool_count": 15,
+          "tools": [
+            "search_apis",
+            "request_tool_access",
+            "list_tool_groups",
+            "get_locus_guide",
+            "describe_api",
+            "pin_endpoint",
+            "estimate_cost",
+            "get_balance",
+            "get_call_result",
+            "cancel_cost_approval",
+            "execute",
+            "workflow_definition",
+            "workflow_validate",
+            "workflow_run",
+            "workflow_runs"
+          ],
+          "json_chars": 15884,
+          "marginal_tokens": 6154
+        }
+      }
+    },
+    "D": {
+      "arm": "D",
+      "tool_count": 54,
+      "total_tokens": 79645,
+      "stock_tokens": 760,
+      "stock_tools": [
+        "web_search",
+        "web_fetch",
+        "python"
+      ],
+      "servers": {
+        "apollo": {
+          "tool_count": 9,
+          "tools": [
+            "apollo_mixed_companies_search",
+            "apollo_mixed_people_api_search",
+            "apollo_organizations_lookup",
+            "apollo_organizations_job_postings",
+            "apollo_organizations_enrich",
+            "apollo_organizations_bulk_enrich",
+            "apollo_people_match",
+            "apollo_people_bulk_match",
+            "apollo_webhook_result_show"
+          ],
+          "json_chars": 89578,
+          "marginal_tokens": 31501
+        },
+        "hunter": {
+          "tool_count": 10,
+          "tools": [
+            "Find-Companies",
+            "Domain-Search",
+            "Domain-Search-Found",
+            "Email-Finder",
+            "Email-Verifier",
+            "Email-Count",
+            "Person-Enrichment",
+            "Company-Enrichment",
+            "Combined-Enrichment",
+            "Find-People"
+          ],
+          "json_chars": 15668,
+          "marginal_tokens": 5714
+        },
+        "prospeo": {
+          "tool_count": 8,
+          "tools": [
+            "search_suggestions",
+            "enrich_person",
+            "bulk_enrich_person",
+            "enrich_company",
+            "bulk_enrich_company",
+            "search_person",
+            "search_company",
+            "get_account_info"
+          ],
+          "json_chars": 50118,
+          "marginal_tokens": 20925
+        },
+        "firecrawl": {
+          "tool_count": 16,
+          "tools": [
+            "firecrawl_scrape",
+            "firecrawl_map",
+            "firecrawl_search",
+            "firecrawl_find_tools",
+            "firecrawl_crawl",
+            "firecrawl_check_crawl_status",
+            "firecrawl_agent",
+            "firecrawl_agent_status",
+            "firecrawl_interact",
+            "firecrawl_interact_stop",
+            "firecrawl_parse",
+            "firecrawl_research_search_papers",
+            "firecrawl_research_inspect_paper",
+            "firecrawl_research_related_papers",
+            "firecrawl_research_read_paper",
+            "firecrawl_developer_search"
+          ],
+          "json_chars": 43747,
+          "marginal_tokens": 16984
+        },
+        "exa": {
+          "tool_count": 2,
+          "tools": [
+            "web_search_exa",
+            "web_fetch_exa"
+          ],
+          "json_chars": 1804,
+          "marginal_tokens": 634
+        },
+        "tavily": {
+          "tool_count": 5,
+          "tools": [
+            "tavily_search",
+            "tavily_extract",
+            "tavily_crawl",
+            "tavily_map",
+            "tavily_research"
+          ],
+          "json_chars": 8242,
+          "marginal_tokens": 2860
+        },
+        "e2b_run_code": {
+          "tool_count": 1,
+          "tools": [
+            "e2b_run_code"
+          ],
+          "json_chars": 706,
+          "marginal_tokens": 267
+        }
+      }
+    }
+  }
+}

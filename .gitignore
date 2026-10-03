@@ -7,3 +7,4 @@ results/raw/
 .DS_Store
 .harness-home/
 harnesses/node/node_modules/
+harnesses/hermes/
