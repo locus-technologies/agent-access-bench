@@ -1,13 +1,13 @@
 {
   "model": "claude-sonnet-5-5",
-  "measured_at": "2026-10-03T22:42:21Z",
+  "measured_at": "2026-10-03T23:39:21Z",
   "method": "count_tokens(messages=[hi], tools=arm tools) minus count_tokens without tools",
   "arms": {
     "B": {
       "arm": "B",
       "tool_count": 3,
-      "total_tokens": 760,
-      "stock_tokens": 760,
+      "total_tokens": 763,
+      "stock_tokens": 763,
       "stock_tools": [
         "web_search",
         "web_fetch",
@@ -17,9 +17,9 @@
     },
     "C": {
       "arm": "C",
-      "tool_count": 18,
-      "total_tokens": 6914,
-      "stock_tokens": 760,
+      "tool_count": 24,
+      "total_tokens": 17104,
+      "stock_tokens": 763,
       "stock_tools": [
         "web_search",
         "web_fetch",
@@ -27,7 +27,7 @@
       ],
       "servers": {
         "locus-pro": {
-          "tool_count": 15,
+          "tool_count": 21,
           "tools": [
             "search_apis",
             "request_tool_access",
@@ -43,18 +43,24 @@
             "workflow_definition",
             "workflow_validate",
             "workflow_run",
-            "workflow_runs"
+            "workflow_runs",
+            "commerce_search",
+            "gtm_enrich",
+            "router_web_search",
+            "travel_flights",
+            "web_extract",
+            "web_research"
           ],
-          "json_chars": 15884,
-          "marginal_tokens": 6154
+          "json_chars": 41294,
+          "marginal_tokens": 16341
         }
       }
     },
     "D": {
       "arm": "D",
       "tool_count": 54,
-      "total_tokens": 79645,
-      "stock_tokens": 760,
+      "total_tokens": 79648,
+      "stock_tokens": 763,
       "stock_tools": [
         "web_search",
         "web_fetch",
