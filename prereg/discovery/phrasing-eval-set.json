@@ -1,0 +1,363 @@
+{
+  "purpose": "Conversational capability queries for evaluating vocabulary-mismatch retrieval. Written 2026-09-07 from the curated capability inventory BEFORE any fix was designed, and BEFORE any of them were run through search, so the HELDOUT half is a genuine held-out set. DEV is the only half consulted while iterating.",
+  "rule": "Never move a query between splits. Never edit a HELDOUT query after seeing its result. If HELDOUT needs changing, the change is a new eval set with a new date.",
+  "dev": [
+    {
+      "q": "what does this screenshot say",
+      "gold": [
+        "mathpix/process-image"
+      ]
+    },
+    {
+      "q": "make me a picture of a cat wearing a hat",
+      "gold": [
+        "openai/image-generate",
+        "grok/image-generate",
+        "fal/generate",
+        "stability-ai/generate-core",
+        "stability-ai/generate-ultra",
+        "stability-ai/generate-sd3"
+      ]
+    },
+    {
+      "q": "turn coordinates into an address",
+      "gold": [
+        "mapbox/geocode-reverse",
+        "openweather/reverse-geocode"
+      ]
+    },
+    {
+      "q": "pull the pricing table off this website",
+      "gold": [
+        "firecrawl/extract",
+        "parallel/extract",
+        "tavily/extract"
+      ]
+    },
+    {
+      "q": "how much could i rent my house for",
+      "gold": [
+        "rentcast/rent-estimate"
+      ]
+    },
+    {
+      "q": "is this file dangerous",
+      "gold": [
+        "virustotal/file-report",
+        "virustotal/analysis"
+      ]
+    },
+    {
+      "q": "how much is apple stock right now",
+      "gold": [
+        "alphavantage/global-quote"
+      ]
+    },
+    {
+      "q": "transcribe this podcast episode for me",
+      "gold": [
+        "deepgram/transcribe"
+      ]
+    },
+    {
+      "q": "write me a song about summer",
+      "gold": [
+        "suno/generate-music",
+        "suno/generate-lyrics"
+      ]
+    },
+    {
+      "q": "will this email bounce",
+      "gold": [
+        "zerobounce/validate-email",
+        "hunter/email-verifier",
+        "zerobounce/validate-batch"
+      ]
+    },
+    {
+      "q": "check if this person is on a sanctions list",
+      "gold": [
+        "ofac/screen",
+        "ofac/search"
+      ]
+    },
+    {
+      "q": "is it going to rain tomorrow",
+      "gold": [
+        "openweather/forecast-5day",
+        "openweather/onecall",
+        "openweather/current-weather",
+        "openweather/weather-overview"
+      ]
+    },
+    {
+      "q": "run this python snippet and show me the output",
+      "gold": [
+        "judge0/execute-code",
+        "judge0/submit-code",
+        "e2b/run-command"
+      ]
+    },
+    {
+      "q": "say this in french",
+      "gold": [
+        "deepl/translate"
+      ]
+    },
+    {
+      "q": "take a picture of this webpage",
+      "gold": [
+        "screenshotone/take"
+      ]
+    },
+    {
+      "q": "what is the square root of 1764",
+      "gold": [
+        "wolframalpha/short-answer",
+        "wolframalpha/full-results"
+      ]
+    },
+    {
+      "q": "who is hiring engineers right now",
+      "gold": [
+        "sumble/jobs",
+        "apollo/job-postings",
+        "diffbot/job"
+      ]
+    },
+    {
+      "q": "where is this ip address located",
+      "gold": [
+        "ipinfo/ip-lite"
+      ]
+    }
+  ],
+  "heldout": [
+    {
+      "q": "read the handwriting in this photo",
+      "gold": [
+        "mathpix/process-image",
+        "mathpix/process-strokes"
+      ]
+    },
+    {
+      "q": "remove the background from this photo",
+      "gold": [
+        "stability-ai/remove-background"
+      ]
+    },
+    {
+      "q": "what are the lat long for this address",
+      "gold": [
+        "mapbox/geocode-forward",
+        "openweather/geocode"
+      ]
+    },
+    {
+      "q": "grab all the text from this url",
+      "gold": [
+        "firecrawl/scrape",
+        "tavily/extract",
+        "parallel/extract",
+        "firecrawl/batch-scrape"
+      ]
+    },
+    {
+      "q": "what is my home worth",
+      "gold": [
+        "rentcast/value-estimate"
+      ]
+    },
+    {
+      "q": "check if this website is malicious",
+      "gold": [
+        "virustotal/url-report",
+        "virustotal/url-scan",
+        "virustotal/domain-report"
+      ]
+    },
+    {
+      "q": "what is bitcoin worth today",
+      "gold": [
+        "coingecko/simple-price",
+        "coingecko/coin-data",
+        "coingecko/coins-markets"
+      ]
+    },
+    {
+      "q": "read this paragraph out loud in a natural voice",
+      "gold": [
+        "deepgram/speak",
+        "elevenlabs/tts",
+        "openai/tts",
+        "grok/tts",
+        "deepgram/speak-flux"
+      ]
+    },
+    {
+      "q": "make this image bigger without losing quality",
+      "gold": [
+        "stability-ai/upscale-fast",
+        "stability-ai/upscale-conservative",
+        "stability-ai/upscale-creative"
+      ]
+    },
+    {
+      "q": "find the email address for someone at this company",
+      "gold": [
+        "hunter/email-finder",
+        "hunter/domain-search",
+        "prospeo/enrich-person"
+      ]
+    },
+    {
+      "q": "what tools does this company use",
+      "gold": [
+        "builtwith/domain",
+        "sumble/organization-tech-stack",
+        "sumble/technology-find"
+      ]
+    },
+    {
+      "q": "how bad is the air quality here",
+      "gold": [
+        "openweather/air-quality"
+      ]
+    },
+    {
+      "q": "how long does it take to drive between these two places",
+      "gold": [
+        "mapbox/directions",
+        "mapbox/matrix"
+      ]
+    },
+    {
+      "q": "look up recent news about this topic",
+      "gold": [
+        "brave/news-search",
+        "tavily/search",
+        "perplexity/search",
+        "apollo/news-search",
+        "router/web-search"
+      ]
+    },
+    {
+      "q": "find me a cheap flight to tokyo",
+      "gold": [
+        "locus-travel/flight-search"
+      ]
+    },
+    {
+      "q": "tell me about this company",
+      "gold": [
+        "hunter/company-enrichment",
+        "apollo/org-enrichment",
+        "prospeo/enrich-company",
+        "sumble/organizations"
+      ]
+    },
+    {
+      "q": "find posts about ai on twitter",
+      "gold": [
+        "x/tweet-search-recent"
+      ]
+    },
+    {
+      "q": "erase an object out of this picture",
+      "gold": [
+        "stability-ai/erase",
+        "stability-ai/inpaint"
+      ]
+    }
+  ],
+  "adjacent_note": "Third battery, added 2026-09-07 after codex round 5. The other two batteries are blind to the class the curated prior actually costs: an intent whose correct answer is a marketplace listing WHILE a curated tool shares generic vocabulary but does something different. Written from the curated inventory by asking, for each curated tool, 'what request shares its words but wants something else?' \u2014 before running any of them.",
+  "adjacent": [
+    {
+      "q": "find an available domain name to register",
+      "goldRe": "namegrep|namecheap|instantdomain|domains-cloudflare|godaddy|porkbun"
+    },
+    {
+      "q": "look up LinkedIn people",
+      "goldRe": "linkedin"
+    },
+    {
+      "q": "get a map of paris",
+      "goldRe": "map|paris|tourism|guide|atlas"
+    },
+    {
+      "q": "find jobs at mcdonalds",
+      "goldRe": "mcdonald|job|career|indeed|glassdoor"
+    },
+    {
+      "q": "search for products on walmart",
+      "goldRe": "walmart"
+    },
+    {
+      "q": "who owns this domain",
+      "goldRe": "whois|namecheap|domaintools|registrar|godaddy|domain"
+    },
+    {
+      "q": "search companies house filings",
+      "goldRe": "companieshouse|companies-house|gov-uk|opencorporates"
+    },
+    {
+      "q": "analyze my competitors website traffic",
+      "goldRe": "similarweb|semrush|ahrefs|traffic|analytic"
+    },
+    {
+      "q": "get instagram profile followers",
+      "goldRe": "instagram|modash|hypeauditor"
+    },
+    {
+      "q": "search reddit comments",
+      "goldRe": "reddit"
+    },
+    {
+      "q": "get flight status for united",
+      "goldRe": "united|flightradar|flightaware|flight"
+    },
+    {
+      "q": "list files on google drive",
+      "goldRe": "drive|google"
+    }
+  ],
+  "astra_note": "Fourth battery, from the gpt-6-astra audits (rounds 8 and 9, 2026-09-08). These are the cases seven codex rounds and three hand-written batteries all missed. Several remain OPEN by decision, not oversight - see report.md 'What is not fixed'.",
+  "astra": [
+    {
+      "q": "find free fonts",
+      "goldRe": "fonts-google",
+      "status": "OPEN \u2014 builtwith/free ranks first; the gate that fixes it costs a curated win"
+    },
+    {
+      "q": "look for linkedin profiles by name",
+      "goldRe": "linkedin",
+      "status": "OPEN on small tenant catalogs \u2014 'linkedin' is excluded as capability vocabulary because clado/linkedin-profile uses the word"
+    },
+    {
+      "q": "use Acme Search to search for matching documents",
+      "goldRe": "custom-acme-search",
+      "status": "FIXED \u2014 tenant-owned provider names now matched as a per-request overlay. Only scorable with a synthetic tenant row: the static-index scorer in harness/ cannot see tenantOwned providers, so it reports this as a miss. The gate test 'honours a caller who names a provider the tenant brought' is what actually covers it."
+    },
+    {
+      "q": "check an available company domain name",
+      "goldRe": "instantdomain|namecheap|godaddy|porkbun|domains-cloudflare",
+      "status": "OPEN - builtwith/domain takes rank 1. The prior reorders rows whose own scores did not change, which is the P1 that falsified 'never worse than today'."
+    },
+    {
+      "q": "search Seek company names",
+      "goldRe": "parse-seek-com",
+      "status": "OPEN - DeepSeek normalizes to 'deep seek', so a native integration's name makes 'seek' capability vocabulary. Needs an explicit brand marker."
+    },
+    {
+      "q": "look up GitHub projects",
+      "goldRe": "github",
+      "status": "OPEN - 'GitHub' normalizes to 'git hub' and matches neither the registered name 'github' nor the host. Needs consistent spelling normalization. Reproduces on 333 native rows + GitHub's 10 endpoints; the full index masks it."
+    },
+    {
+      "q": "generate an image of the numbers from a text prompt",
+      "goldRe": "image-generate|/generate$",
+      "status": "FIXED round 9 - stop words are stripped before the single-word brand disqualifier, so 'The Numbers' no longer escapes it."
+    }
+  ],
+  "astra_scoring_note": "Scored on the FULL static index by harness/mcp-eval-batteries.local.test.ts: 3/7 @1, 6/7 @5. Three cases do not reproduce in that shape and are not scorable there: 'use Acme Search' needs a tenant-owned row (gate test covers it), and 'look for linkedin profiles by name' and 'look up GitHub projects' reproduce on a restricted catalog (333 native rows plus the one provider's endpoints), which is closer to a real tenant's enabled subset than the full index is. Read the per-case status, not the aggregate."
+}

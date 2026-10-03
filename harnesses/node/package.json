@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@google/gemini-cli": "^0.62.0",
+    "@openai/codex": "^0.160.0"
+  }
+}
