@@ -1,9 +1,11 @@
 """Graders. Deterministic checks first; a cross-family LLM judge only where a claims rubric is
 unavoidable. Every scorer returns value 1 (pass) or 0 (fail) plus a JSON-able explanation."""
 
+import asyncio
 import json
 import os
 import re
+import time
 import unicodedata
 
 import httpx
@@ -20,6 +22,26 @@ JUDGE_DEFAULT = "anthropic/claude-opus-5-5"
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+'-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 ZEROBOUNCE_URL = "https://api.zerobounce.net/v2/validate"
+
+
+# Live truth is captured off the event loop (captures are blocking HTTP calls) and shared
+# for up to 10 minutes per (capture, args): the pre-registration's snapshot window. Without
+# this, each capture froze every concurrent sample and ran 81 times per task.
+CAPTURE_TTL_S = 600
+_capture_cache: dict[str, tuple[float, object]] = {}
+_capture_locks: dict[str, asyncio.Lock] = {}
+
+
+async def capture(name: str, args: dict):
+    key = name + json.dumps(args, sort_keys=True)
+    lock = _capture_locks.setdefault(key, asyncio.Lock())
+    async with lock:
+        hit = _capture_cache.get(key)
+        if hit and time.monotonic() - hit[0] < CAPTURE_TTL_S:
+            return hit[1]
+        value = await asyncio.to_thread(getattr(truth, name), **args)
+        _capture_cache[key] = (time.monotonic(), value)
+        return value
 
 
 def norm(s: str) -> str:
@@ -76,13 +98,13 @@ async def grade(task: Task, answer: str, agent_model: str) -> tuple[bool, dict]:
         return hit is not None, {"matched": hit}
 
     if g.type == "number":
-        gold = g.gold if g.capture is None else getattr(truth, g.capture)(**g.capture_args)
+        gold = g.gold if g.capture is None else await capture(g.capture, g.capture_args)
         tol = max(g.abs_tol, abs(gold) * g.rel_tol)
         nums = numbers_in(answer)
         return any(abs(n - gold) <= tol for n in nums), {"gold": gold, "tol": tol, "found": nums[:20]}
 
     if g.type == "set":
-        gold = g.gold if g.capture is None else getattr(truth, g.capture)(**g.capture_args)
+        gold = g.gold if g.capture is None else await capture(g.capture, g.capture_args)
         hits = [x for x in gold if contains(answer, x)]
         recall = len(hits) / len(gold) if gold else 0.0
         return recall >= g.min_recall, {"gold": gold, "hits": hits, "recall": recall}

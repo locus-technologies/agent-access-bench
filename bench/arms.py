@@ -31,12 +31,15 @@ def web_search() -> Tool:
         """
         async with _search_gate:
             for attempt in range(5):
-                async with httpx.AsyncClient(timeout=60) as client:
-                    resp = await client.post(
-                        "https://api.tavily.com/search",
-                        json={"query": query, "max_results": 8},
-                        headers={"Authorization": "Bearer " + os.environ["TAVILY_API_KEY"]},
-                    )
+                try:
+                    async with httpx.AsyncClient(timeout=60) as client:
+                        resp = await client.post(
+                            "https://api.tavily.com/search",
+                            json={"query": query, "max_results": 8},
+                            headers={"Authorization": "Bearer " + os.environ["TAVILY_API_KEY"]},
+                        )
+                except httpx.HTTPError as e:
+                    return f"Search failed ({type(e).__name__}). Try again or another approach."
                 if resp.status_code != 429:
                     break
                 await asyncio.sleep(5 * 2**attempt)
