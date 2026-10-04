@@ -358,7 +358,7 @@ def load_runs(log_dirs: list[str], prices: dict, tool_tokens: dict) -> tuple[lis
                 arm = base["arm"]
                 tdt = 0 if arm == "A" else (tool_tokens.get(arm) or {}).get("total_tokens")
                 r = {
-                    "log": Path(path).name, "model": agent, "arm": arm, "task": s.id, "epoch": s.epoch,
+                    "log": Path(path).name, "log_dir": d, "model": agent, "arm": arm, "task": s.id, "epoch": s.epoch,
                     "battery": battery_of(s.id, task.get("battery", "")), "grader_type": grader.get("type"),
                     "d_eligible": bool(task.get("d_eligible")),
                     "success_raw": int(base["score"] or 0), "grader_error": base["grader_error"],
@@ -385,7 +385,45 @@ def load_runs(log_dirs: list[str], prices: dict, tool_tokens: dict) -> tuple[lis
                 r["success"] = r["success_raw"]
                 r["total_usd"] = None if r["model_usd"] is None else r["model_usd"] + r["locus_usd"] + r["vendor_usd_est"]
                 runs.append(r)
-    return runs, sources
+    return select_runs(runs), sources
+
+
+# Run-selection policy (docs/CHANGELOG.md, 2026-10-04 ~03:50Z and ~05:30Z).
+EXCLUDED_MODELS = {"google/gemini-3.1-pro-preview"}  # rerouted via OpenRouter
+INFRA_ERROR = ("ConnectError", "ConnectTimeout", "Connection closed", "Error querying for running services",
+               "Error reading docker config", "ev_poll_posix", "ModelGenerateError", "CancelledError", "RemoteProtocolError",
+               "ReadError")
+
+
+def is_infra_error(err) -> bool:
+    return bool(err) and any(k in str(err) for k in INFRA_ERROR)
+
+
+def select_runs(runs: list[dict]) -> list[dict]:
+    """One run per (model, arm, task, epoch), from success logs only. An infrastructure error is
+    replaced by a targeted rerun from logs/rerun when one exists; otherwise it stays a failure."""
+    runs = [r for r in runs if r["model"] not in EXCLUDED_MODELS]
+    reruns: dict[tuple, list[dict]] = {}
+    primary: dict[tuple, dict] = {}
+    for r in runs:
+        if Path(r["log_dir"]).name == "rerun":
+            reruns.setdefault((r["model"], r["arm"], r["task"]), []).append(r)
+            continue
+        key = (r["model"], r["arm"], r["task"], r["epoch"])
+        prev = primary.get(key)
+        # Duplicates come only from resumed logs; prefer a non-error sample.
+        if prev is None or (prev["error"] and not r["error"]):
+            primary[key] = r
+    out = []
+    for key, r in sorted(primary.items(), key=lambda kv: kv[0]):
+        if is_infra_error(r["error"]):
+            pool = reruns.get(key[:3], [])
+            if pool:
+                rr = dict(pool.pop(0)); rr["epoch"] = r["epoch"]; rr["replaced_infra_error"] = str(r["error"])[:120]
+                out.append(rr)
+                continue
+        out.append(r)
+    return out
 
 
 def load_ledger(path: Path = LEDGER_PATH) -> list[dict]:
