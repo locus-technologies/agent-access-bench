@@ -9,3 +9,5 @@ results/raw/
 harnesses/node/node_modules/
 harnesses/hermes/
 harnesses/locus-pro-plugin/
+deliverables/clips/node/
+deliverables/clips/frames/
