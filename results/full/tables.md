@@ -1,8 +1,8 @@
 # Agent access bench: analysis tables
 
-Logs: 71. Runs: 7707. Models: anthropic/claude-haiku-4-5, anthropic/claude-opus-5-5, anthropic/claude-sonnet-5-5, google/gemini-3.8-flash, grok/grok-4.7, openai/gpt-6-luna, openai/gpt-6.1-sol, openrouter/deepseek/deepseek-v4-pro-0813, openrouter/google/gemini-3.1-pro-preview. Arms: A, B, C, D. Bootstrap: 10,000 cluster resamples over tasks, seed sha256('agent-access-bench-v1') = 1056477527888400723. Differences are in percentage points.
+Logs: 81. Runs: 7857. Models: anthropic/claude-haiku-4-5, anthropic/claude-opus-5-5, anthropic/claude-sonnet-5-5, google/gemini-3.8-flash, grok/grok-4.7, openai/gpt-6-luna, openai/gpt-6.1-sol, openrouter/deepseek/deepseek-v4-pro-0813, openrouter/google/gemini-3.1-pro-preview. Arms: A, B, C, D. Bootstrap: 10,000 cluster resamples over tasks, seed sha256('agent-access-bench-v1') = 1056477527888400723. Differences are in percentage points.
 
-Runs per scope: {"h1": 5049, "structured-public": 1188, "control": 1215, "d_subset": 4860, "spend": 255}. Pilot runs excluded: 0. Grading (judge) cost, not counted in any arm: $25.8658.
+Runs per scope: {"h1": 5049, "structured-public": 1188, "control": 1215, "d_subset": 4860, "spend": 405}. Pilot runs excluded: 0. Grading (judge) cost, not counted in any arm: $26.8680.
 
 ## H1 (primary): access batteries, C - B
 
@@ -84,21 +84,31 @@ Arm C spend of record is the Locus ledger (allocated minus settled end-user bala
 | logs | B | anthropic/claude-haiku-4-5 | 15 | 0 | $0.0000 | $0.0000 |
 | logs | B | anthropic/claude-opus-5-5 | 15 | 0 | $0.0000 | $0.0000 |
 | logs | B | anthropic/claude-sonnet-5-5 | 15 | 0 | $0.0000 | $0.0000 |
+| logs | B | google/gemini-3.8-flash | 15 | 0 | $0.0000 | $0.0000 |
 | logs | B | grok/grok-4.7 | 15 | 0 | $0.0000 | $0.0000 |
 | logs | B | openai/gpt-6-luna | 15 | 0 | $0.0000 | $0.0000 |
 | logs | B | openai/gpt-6.1-sol | 15 | 0 | $0.0000 | $0.0000 |
+| logs | B | openrouter/deepseek/deepseek-v4-pro-0813 | 15 | 0 | $0.0000 | $0.0000 |
 | logs | B | openrouter/google/gemini-3.1-pro-preview | 15 | 0 | $0.0000 | $0.0000 |
 | logs | C | anthropic/claude-haiku-4-5 | 15 | 0 | $0.0000 | $0.9109 |
 | logs | C | anthropic/claude-opus-5-5 | 14 | 0 | $0.0000 | $5.6111 |
 | logs | C | anthropic/claude-sonnet-5-5 | 13 | 0 | $0.0000 | $5.6760 |
+| logs | C | google/gemini-3.8-flash | 15 | 0 | $0.0000 | $1.9788 |
+| logs | C | grok/grok-4.7 | 15 | 0 | $0.0000 | $3.2167 |
 | logs | C | openai/gpt-6-luna | 15 | 0 | $0.0000 | $8.9859 |
 | logs | C | openai/gpt-6.1-sol | 14 | 0 | $0.0000 | $15.2737 |
+| logs | C | openrouter/deepseek/deepseek-v4-pro-0813 | 13 | 0 | $0.0000 | $3.3262 |
+| logs | C | openrouter/google/gemini-3.1-pro-preview | 15 | 0 | $0.0000 | $3.2981 |
 | logs | D | anthropic/claude-haiku-4-5 | 15 | 0 | $0.0000 | $2.8112 |
 | logs | D | anthropic/claude-opus-5-5 | 15 | 0 | $0.0000 | $4.6334 |
 | logs | D | anthropic/claude-sonnet-5-5 | 15 | 0 | $0.0000 | $4.7724 |
+| logs | D | google/gemini-3.8-flash | 15 | 0 | $0.0000 | $3.0760 |
+| logs | D | grok/grok-4.7 | 14 | 0 | $0.0000 | $2.5952 |
 | logs | D | openai/gpt-6-luna | 15 | 0 | $0.0000 | $2.8756 |
 | logs | D | openai/gpt-6.1-sol | 14 | 0 | $0.0000 | $1.2825 |
-| ledger | C | (all) | 114 | 0 | | $48.0758 of $227.0000 budget |
+| logs | D | openrouter/deepseek/deepseek-v4-pro-0813 | 14 | 0 | $0.0000 | $1.2807 |
+| logs | D | openrouter/google/gemini-3.1-pro-preview | 15 | 0 | $0.0000 | $5.3350 |
+| ledger | C | (all) | 140 | 0 | | $54.1838 of $280.5000 budget |
 
 ## Success rates (Wilson 95% CI over runs) and efficiency
 
@@ -248,14 +258,24 @@ Arm C spend of record is the Locus ledger (allocated minus settled end-user bala
 | spend | anthropic/claude-sonnet-5-5 | B | 15 | 40.0% | [19.8%, 64.3%] | 68 / 276 | 10.6 | 763 |
 | spend | anthropic/claude-sonnet-5-5 | C | 15 | 46.7% | [24.8%, 69.9%] | 343 / 921 | 40.7 | 17104 |
 | spend | anthropic/claude-sonnet-5-5 | D | 15 | 46.7% | [24.8%, 69.9%] | 241 / 682 | 32.8 | 79648 |
+| spend | google/gemini-3.8-flash | B | 15 | 40.0% | [19.8%, 64.3%] | 35 / 635 | 16.3 | 763 |
+| spend | google/gemini-3.8-flash | C | 15 | 40.0% | [19.8%, 64.3%] | 98 / 663 | 31.7 | 17104 |
+| spend | google/gemini-3.8-flash | D | 15 | 40.0% | [19.8%, 64.3%] | 162 / 857 | 33.3 | 79648 |
 | spend | grok/grok-4.7 | B | 15 | 66.7% | [41.7%, 84.8%] | 69 / 393 | 28.1 | 763 |
+| spend | grok/grok-4.7 | C | 15 | 46.7% | [24.8%, 69.9%] | 483 / 1807 | 58.8 | 17104 |
+| spend | grok/grok-4.7 | D | 15 | 60.0% | [35.7%, 80.2%] | 449 / 830 | 46.2 | 79648 |
 | spend | openai/gpt-6-luna | B | 15 | 73.3% | [48.0%, 89.1%] | 75 / 253 | 38.8 | 763 |
 | spend | openai/gpt-6-luna | C | 15 | 80.0% | [54.8%, 93.0%] | 142 / 467 | 44.3 | 17104 |
 | spend | openai/gpt-6-luna | D | 15 | 53.3% | [30.1%, 75.2%] | 52 / 256 | 18.3 | 79648 |
 | spend | openai/gpt-6.1-sol | B | 15 | 40.0% | [19.8%, 64.3%] | 26 / 405 | 27.5 | 763 |
 | spend | openai/gpt-6.1-sol | C | 15 | 60.0% | [35.7%, 80.2%] | 408 / 971 | 73.5 | 17104 |
 | spend | openai/gpt-6.1-sol | D | 15 | 40.0% | [19.8%, 64.3%] | 43 / 478 | 33.8 | 79648 |
+| spend | openrouter/deepseek/deepseek-v4-pro-0813 | B | 15 | 46.7% | [24.8%, 69.9%] | 226 / 1048 | 39.0 | 763 |
+| spend | openrouter/deepseek/deepseek-v4-pro-0813 | C | 15 | 40.0% | [19.8%, 64.3%] | 575 / 1158 | 55.3 | 17104 |
+| spend | openrouter/deepseek/deepseek-v4-pro-0813 | D | 15 | 60.0% | [35.7%, 80.2%] | 332 / 1256 | 23.3 | 79648 |
 | spend | openrouter/google/gemini-3.1-pro-preview | B | 15 | 46.7% | [24.8%, 69.9%] | 58 / 264 | 9.2 | 763 |
+| spend | openrouter/google/gemini-3.1-pro-preview | C | 15 | 46.7% | [24.8%, 69.9%] | 113 / 538 | 27.6 | 17104 |
+| spend | openrouter/google/gemini-3.1-pro-preview | D | 15 | 53.3% | [30.1%, 75.2%] | 141 / 404 | 25.9 | 79648 |
 
 ## Cost per successful task (model + Locus + D vendor estimate)
 
@@ -407,14 +427,24 @@ Model cost from list prices in prereg/model-prices.json. D vendor spend is an ES
 | spend | anthropic/claude-sonnet-5-5 | B | $1.7743 | $0.0000 | $0.0000 | $1.7743 | $0.2957 | [$0.0839, $0.8822] |
 | spend | anthropic/claude-sonnet-5-5 | C | $7.3225 | $7.9115 | $0.0000 | $15.2339 | $2.1763 | [$0.7026, $12.1126] |
 | spend | anthropic/claude-sonnet-5-5 | D | $8.9689 | $0.0000 | $4.7724* | $13.7413 | $1.9630 | [$0.9156, $5.6135] |
+| spend | google/gemini-3.8-flash | B | $2.1626 | $0.0000 | $0.0000 | $2.1626 | $0.3604 | [$0.0362, $1.7735] |
+| spend | google/gemini-3.8-flash | C | $4.0154 | $1.9098 | $0.0000 | $5.9251 | $0.9875 | [$0.1667, $2.6523] |
+| spend | google/gemini-3.8-flash | D | $5.6466 | $0.0000 | $3.0760 | $8.7226 | $1.4538 | [$0.3167, $4.1950] |
 | spend | grok/grok-4.7 | B | $4.9330 | $0.0000 | $0.0000 | $4.9330 | $0.4933 | [$0.1501, $0.8144] |
+| spend | grok/grok-4.7 | C | $16.7192 | $2.7764 | $0.0000 | $19.4956 | $2.7851 | [$1.5670, $10.3813] |
+| spend | grok/grok-4.7 | D | $19.0732 | $0.0000 | $2.9012* | $21.9744 | $2.4416 | [$1.3403, $5.4023] |
 | spend | openai/gpt-6-luna | B | $0.1485 | $0.0000 | $0.0000 | $0.1485 | $0.0135 | [$0.0057, $0.0239] |
 | spend | openai/gpt-6-luna | C | $0.2527 | $8.9219 | $0.0000 | $9.1746 | $0.7646 | [$0.0613, $1.6127] |
 | spend | openai/gpt-6-luna | D | $0.2164 | $0.0000 | $2.8756* | $3.0920 | $0.3865 | [$0.0364, $1.4514] |
 | spend | openai/gpt-6.1-sol | B | $2.2710 | $0.0000 | $0.0000 | $2.2710 | $0.3785 | [$0.0362, $1.0504] |
 | spend | openai/gpt-6.1-sol | C | $5.3300 | $16.5202 | $0.0000 | $21.8503 | $2.4278 | [$1.4127, $4.0858] |
 | spend | openai/gpt-6.1-sol | D | $2.7775 | $0.0000 | $1.2825* | $4.0600 | $0.6767 | [$0.2302, $2.8608] |
+| spend | openrouter/deepseek/deepseek-v4-pro-0813 | B | $2.1653 | $0.0000 | $0.0000 | $2.1653 | $0.3093 | [$0.0831, $1.2753] |
+| spend | openrouter/deepseek/deepseek-v4-pro-0813 | C | $4.1634 | $4.6352 | $0.0000 | $8.7986 | $1.4664 | [$0.6004, $3.8811] |
+| spend | openrouter/deepseek/deepseek-v4-pro-0813 | D | $3.2514 | $0.0000 | $1.2807* | $4.5321 | $0.5036 | [$0.2668, $0.8429] |
 | spend | openrouter/google/gemini-3.1-pro-preview | B | $2.3524 | $0.0000 | $0.0000 | $2.3524 | $0.3361 | [$0.0775, $1.6200] |
+| spend | openrouter/google/gemini-3.1-pro-preview | C | $5.2904 | $3.1771 | $0.0000 | $8.4675 | $1.2096 | [$0.4249, $2.5365] |
+| spend | openrouter/google/gemini-3.1-pro-preview | D | $6.3289 | $0.0000 | $5.3350* | $11.6638 | $1.4580 | [$0.5648, $3.8847] |
 
 `*` some runs' vendor estimate is a lower bound (unpriced or variable-price calls).
 

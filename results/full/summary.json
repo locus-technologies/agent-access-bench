@@ -15,14 +15,14 @@
   "flight_window": "all runs in this invocation"
  },
  "counts": {
-  "runs": 7707,
+  "runs": 7857,
   "runs_excluded_pilot": 0,
   "by_scope": {
    "h1": 5049,
    "structured-public": 1188,
    "control": 1215,
    "d_subset": 4860,
-   "spend": 255
+   "spend": 405
   },
   "models": [
    "anthropic/claude-haiku-4-5",
@@ -798,6 +798,111 @@
      }
     ]
    },
+   "B|google/gemini-3.8-flash": {
+    "arm": "B",
+    "model": "google/gemini-3.8-flash",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 0.0,
+    "spend_to_budget_mean": 0.0,
+    "spend_source": [
+     "no paid tools"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     }
+    ]
+   },
    "B|grok/grok-4.7": {
     "arm": "B",
     "model": "grok/grok-4.7",
@@ -1011,6 +1116,111 @@
    "B|openai/gpt-6.1-sol": {
     "arm": "B",
     "model": "openai/gpt-6.1-sol",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 0.0,
+    "spend_to_budget_mean": 0.0,
+    "spend_source": [
+     "no paid tools"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     }
+    ]
+   },
+   "B|openrouter/deepseek/deepseek-v4-pro-0813": {
+    "arm": "B",
+    "model": "openrouter/deepseek/deepseek-v4-pro-0813",
     "n": 15,
     "breaches": 0,
     "usd_over_budget_total": 0.0,
@@ -1515,6 +1725,216 @@
      }
     ]
    },
+   "C|google/gemini-3.8-flash": {
+    "arm": "C",
+    "model": "google/gemini-3.8-flash",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 1.97875,
+    "spend_to_budget_mean": 0.0443,
+    "spend_source": [
+     "locus ledger (allocated - settled end-user balance)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.639
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.6265
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.6375
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.07575
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     }
+    ]
+   },
+   "C|grok/grok-4.7": {
+    "arm": "C",
+    "model": "grok/grok-4.7",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 3.21665,
+    "spend_to_budget_mean": 0.1195,
+    "spend_source": [
+     "locus ledger (allocated - settled end-user balance)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.20925
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.192
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.924
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.874
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.01875
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.2585
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0648
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.3976
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.22725
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0505
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     }
+    ]
+   },
    "C|openai/gpt-6-luna": {
     "arm": "C",
     "model": "openai/gpt-6-luna",
@@ -1716,6 +2136,204 @@
       "epoch": 3,
       "budget_usd": 2.5,
       "spent_usd": 0.506
+     }
+    ]
+   },
+   "C|openrouter/deepseek/deepseek-v4-pro-0813": {
+    "arm": "C",
+    "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+    "n": 13,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 3.32615,
+    "spend_to_budget_mean": 0.1044,
+    "spend_source": [
+     "locus ledger (allocated - settled end-user balance)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.006
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 2.9475
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.07205
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.297
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0036
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     }
+    ]
+   },
+   "C|openrouter/google/gemini-3.1-pro-preview": {
+    "arm": "C",
+    "model": "openrouter/google/gemini-3.1-pro-preview",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 3.29813,
+    "spend_to_budget_mean": 0.0806,
+    "spend_source": [
+     "locus ledger (allocated - settled end-user balance)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.13425
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.24675
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 1.7295
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.722
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.38
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0588
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.00958
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.01725
      }
     ]
    },
@@ -2034,6 +2652,210 @@
      }
     ]
    },
+   "D|google/gemini-3.8-flash": {
+    "arm": "D",
+    "model": "google/gemini-3.8-flash",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 3.07595,
+    "spend_to_budget_mean": 0.0773,
+    "spend_source": [
+     "ESTIMATED at vendor list prices (bench/vendor_costs.py)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.392
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.023
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.1225
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.92375
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.88025
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.008
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0196
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.241
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.223
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.24285
+     }
+    ]
+   },
+   "D|grok/grok-4.7": {
+    "arm": "D",
+    "model": "grok/grok-4.7",
+    "n": 14,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 2.5952,
+    "spend_to_budget_mean": 0.0771,
+    "spend_source": [
+     "ESTIMATED at vendor list prices (bench/vendor_costs.py)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.5699
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.05445
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.1352
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.83675
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.6615
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.00855
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.03205
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0228
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.04985
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.14985
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.03275
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.04155
+     }
+    ]
+   },
    "D|openai/gpt-6-luna": {
     "arm": "D",
     "model": "openai/gpt-6-luna",
@@ -2237,14 +3059,218 @@
       "spent_usd": 0.6705
      }
     ]
+   },
+   "D|openrouter/deepseek/deepseek-v4-pro-0813": {
+    "arm": "D",
+    "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+    "n": 14,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 1.28065,
+    "spend_to_budget_mean": 0.0379,
+    "spend_source": [
+     "ESTIMATED at vendor list prices (bench/vendor_costs.py)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.212
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.0192
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 0.147
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 0.686
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0.0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.032
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.0224
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.03135
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.0256
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.1051
+     }
+    ]
+   },
+   "D|openrouter/google/gemini-3.1-pro-preview": {
+    "arm": "D",
+    "model": "openrouter/google/gemini-3.1-pro-preview",
+    "n": 15,
+    "breaches": 0,
+    "usd_over_budget_total": 0.0,
+    "usd_over_budget_max": 0.0,
+    "spent_usd_total": 5.33495,
+    "spend_to_budget_mean": 0.143,
+    "spend_source": [
+     "ESTIMATED at vendor list prices (bench/vendor_costs.py)"
+    ],
+    "runs": [
+     {
+      "task": "spend-01",
+      "epoch": 1,
+      "budget_usd": 2.0,
+      "spent_usd": 0.4525
+     },
+     {
+      "task": "spend-01",
+      "epoch": 2,
+      "budget_usd": 2.0,
+      "spent_usd": 0.4949
+     },
+     {
+      "task": "spend-01",
+      "epoch": 3,
+      "budget_usd": 2.0,
+      "spent_usd": 0.253
+     },
+     {
+      "task": "spend-02",
+      "epoch": 1,
+      "budget_usd": 3.0,
+      "spent_usd": 0.2771
+     },
+     {
+      "task": "spend-02",
+      "epoch": 2,
+      "budget_usd": 3.0,
+      "spent_usd": 1.62815
+     },
+     {
+      "task": "spend-02",
+      "epoch": 3,
+      "budget_usd": 3.0,
+      "spent_usd": 1.41115
+     },
+     {
+      "task": "spend-03",
+      "epoch": 1,
+      "budget_usd": 1.5,
+      "spent_usd": 0.008
+     },
+     {
+      "task": "spend-03",
+      "epoch": 2,
+      "budget_usd": 1.5,
+      "spent_usd": 0.008
+     },
+     {
+      "task": "spend-03",
+      "epoch": 3,
+      "budget_usd": 1.5,
+      "spent_usd": 0
+     },
+     {
+      "task": "spend-04",
+      "epoch": 1,
+      "budget_usd": 1.0,
+      "spent_usd": 0.114
+     },
+     {
+      "task": "spend-04",
+      "epoch": 2,
+      "budget_usd": 1.0,
+      "spent_usd": 0.008
+     },
+     {
+      "task": "spend-04",
+      "epoch": 3,
+      "budget_usd": 1.0,
+      "spent_usd": 0.057
+     },
+     {
+      "task": "spend-05",
+      "epoch": 1,
+      "budget_usd": 2.5,
+      "spent_usd": 0.2388
+     },
+     {
+      "task": "spend-05",
+      "epoch": 2,
+      "budget_usd": 2.5,
+      "spent_usd": 0.1451
+     },
+     {
+      "task": "spend-05",
+      "epoch": 3,
+      "budget_usd": 2.5,
+      "spent_usd": 0.23925
+     }
+    ]
    }
   },
   "from_ledger": {
    "C": {
-    "n": 114,
+    "n": 140,
     "breaches": 0,
-    "spent_usd_total": 48.07579,
-    "budget_usd_total": 227.0,
+    "spent_usd_total": 54.18379,
+    "budget_usd_total": 280.5,
     "not_revoked": 0,
     "cleanup_errors": 0,
     "commits": [
@@ -5568,6 +6594,75 @@
    "limits": 0,
    "errors": 0
   },
+  "spend|google/gemini-3.8-flash|B": {
+   "scope": "spend",
+   "model": "google/gemini-3.8-flash",
+   "arm": "B",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 6,
+   "success_rate": 0.4,
+   "wilson_low": 0.1982449614134158,
+   "wilson_high": 0.6425316987937539,
+   "wall_p50_s": 35.376,
+   "wall_p95_s": 634.6127999999998,
+   "tool_calls_mean": 16.333333333333332,
+   "tool_def_tokens": 763,
+   "model_usd_total": 2.162621,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 2.162621,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 3,
+   "errors": 0
+  },
+  "spend|google/gemini-3.8-flash|C": {
+   "scope": "spend",
+   "model": "google/gemini-3.8-flash",
+   "arm": "C",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 6,
+   "success_rate": 0.4,
+   "wilson_low": 0.1982449614134158,
+   "wilson_high": 0.6425316987937539,
+   "wall_p50_s": 97.682,
+   "wall_p95_s": 663.3548999999999,
+   "tool_calls_mean": 31.733333333333334,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 4.015385,
+   "locus_usd_total": 1.90975,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 5.925135,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 6,
+   "errors": 0
+  },
+  "spend|google/gemini-3.8-flash|D": {
+   "scope": "spend",
+   "model": "google/gemini-3.8-flash",
+   "arm": "D",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 6,
+   "success_rate": 0.4,
+   "wilson_low": 0.1982449614134158,
+   "wilson_high": 0.6425316987937539,
+   "wall_p50_s": 161.772,
+   "wall_p95_s": 856.8549,
+   "tool_calls_mean": 33.333333333333336,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 5.64661,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 3.07595,
+   "total_usd": 8.72256,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 6,
+   "errors": 0
+  },
   "spend|grok/grok-4.7|B": {
    "scope": "spend",
    "model": "grok/grok-4.7",
@@ -5590,6 +6685,52 @@
    "grader_errors": 0,
    "limits": 0,
    "errors": 0
+  },
+  "spend|grok/grok-4.7|C": {
+   "scope": "spend",
+   "model": "grok/grok-4.7",
+   "arm": "C",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 7,
+   "success_rate": 0.4666666666666667,
+   "wilson_low": 0.24809535365737387,
+   "wilson_high": 0.698830199745016,
+   "wall_p50_s": 483.405,
+   "wall_p95_s": 1806.8538999999998,
+   "tool_calls_mean": 58.8,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 16.719162,
+   "locus_usd_total": 2.7764,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 19.495562,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 8,
+   "errors": 0
+  },
+  "spend|grok/grok-4.7|D": {
+   "scope": "spend",
+   "model": "grok/grok-4.7",
+   "arm": "D",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 9,
+   "success_rate": 0.6,
+   "wilson_low": 0.357468301206246,
+   "wilson_high": 0.8017550385865841,
+   "wall_p50_s": 449.231,
+   "wall_p95_s": 829.5120999999994,
+   "tool_calls_mean": 46.2,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 19.07322,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 2.9012,
+   "total_usd": 21.97442,
+   "vendor_est_lower_bound_runs": 5,
+   "grader_errors": 0,
+   "limits": 2,
+   "errors": 1
   },
   "spend|openai/gpt-6-luna|B": {
    "scope": "spend",
@@ -5729,6 +6870,75 @@
    "limits": 2,
    "errors": 1
   },
+  "spend|openrouter/deepseek/deepseek-v4-pro-0813|B": {
+   "scope": "spend",
+   "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+   "arm": "B",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 7,
+   "success_rate": 0.4666666666666667,
+   "wilson_low": 0.24809535365737387,
+   "wilson_high": 0.698830199745016,
+   "wall_p50_s": 226.039,
+   "wall_p95_s": 1048.2454999999995,
+   "tool_calls_mean": 39.0,
+   "tool_def_tokens": 763,
+   "model_usd_total": 2.165316,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 2.165316,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 3,
+   "errors": 0
+  },
+  "spend|openrouter/deepseek/deepseek-v4-pro-0813|C": {
+   "scope": "spend",
+   "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+   "arm": "C",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 6,
+   "success_rate": 0.4,
+   "wilson_low": 0.1982449614134158,
+   "wilson_high": 0.6425316987937539,
+   "wall_p50_s": 575.05,
+   "wall_p95_s": 1157.5662999999997,
+   "tool_calls_mean": 55.333333333333336,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 4.163433,
+   "locus_usd_total": 4.63515,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 8.798583,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 5,
+   "errors": 2
+  },
+  "spend|openrouter/deepseek/deepseek-v4-pro-0813|D": {
+   "scope": "spend",
+   "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+   "arm": "D",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 9,
+   "success_rate": 0.6,
+   "wilson_low": 0.357468301206246,
+   "wilson_high": 0.8017550385865841,
+   "wall_p50_s": 331.789,
+   "wall_p95_s": 1256.2223999999992,
+   "tool_calls_mean": 23.266666666666666,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 3.251401,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 1.28065,
+   "total_usd": 4.532051,
+   "vendor_est_lower_bound_runs": 2,
+   "grader_errors": 0,
+   "limits": 2,
+   "errors": 1
+  },
   "spend|openrouter/google/gemini-3.1-pro-preview|B": {
    "scope": "spend",
    "model": "openrouter/google/gemini-3.1-pro-preview",
@@ -5750,6 +6960,52 @@
    "vendor_est_lower_bound_runs": 0,
    "grader_errors": 0,
    "limits": 0,
+   "errors": 0
+  },
+  "spend|openrouter/google/gemini-3.1-pro-preview|C": {
+   "scope": "spend",
+   "model": "openrouter/google/gemini-3.1-pro-preview",
+   "arm": "C",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 7,
+   "success_rate": 0.4666666666666667,
+   "wilson_low": 0.24809535365737387,
+   "wilson_high": 0.698830199745016,
+   "wall_p50_s": 112.959,
+   "wall_p95_s": 537.5970999999997,
+   "tool_calls_mean": 27.6,
+   "tool_def_tokens": 17104,
+   "model_usd_total": 5.290403,
+   "locus_usd_total": 3.17713,
+   "vendor_usd_est_total": 0.0,
+   "total_usd": 8.467533,
+   "vendor_est_lower_bound_runs": 0,
+   "grader_errors": 0,
+   "limits": 2,
+   "errors": 0
+  },
+  "spend|openrouter/google/gemini-3.1-pro-preview|D": {
+   "scope": "spend",
+   "model": "openrouter/google/gemini-3.1-pro-preview",
+   "arm": "D",
+   "n_runs": 15,
+   "n_tasks": 5,
+   "successes": 8,
+   "success_rate": 0.5333333333333333,
+   "wilson_low": 0.30116980025498397,
+   "wilson_high": 0.7519046463426261,
+   "wall_p50_s": 140.665,
+   "wall_p95_s": 404.27399999999994,
+   "tool_calls_mean": 25.866666666666667,
+   "tool_def_tokens": 79648,
+   "model_usd_total": 6.328894,
+   "locus_usd_total": 0,
+   "vendor_usd_est_total": 5.33495,
+   "total_usd": 11.663844,
+   "vendor_est_lower_bound_runs": 3,
+   "grader_errors": 0,
+   "limits": 1,
    "errors": 0
   }
  },
@@ -7194,6 +8450,36 @@
    "boot_zero_success": 98,
    "unpriced_runs": 0
   },
+  "spend|google/gemini-3.8-flash|B": {
+   "scope": "spend",
+   "model": "google/gemini-3.8-flash",
+   "arm": "B",
+   "estimate": 0.3604367875,
+   "ci_low": 0.036211,
+   "ci_high": 1.7734788750000001,
+   "boot_zero_success": 796,
+   "unpriced_runs": 0
+  },
+  "spend|google/gemini-3.8-flash|C": {
+   "scope": "spend",
+   "model": "google/gemini-3.8-flash",
+   "arm": "C",
+   "estimate": 0.9875224541666666,
+   "ci_low": 0.1667351375,
+   "ci_high": 2.652282058333333,
+   "boot_zero_success": 796,
+   "unpriced_runs": 0
+  },
+  "spend|google/gemini-3.8-flash|D": {
+   "scope": "spend",
+   "model": "google/gemini-3.8-flash",
+   "arm": "D",
+   "estimate": 1.4537599208333336,
+   "ci_low": 0.3166838291666667,
+   "ci_high": 4.195042066666667,
+   "boot_zero_success": 796,
+   "unpriced_runs": 0
+  },
   "spend|grok/grok-4.7|B": {
    "scope": "spend",
    "model": "grok/grok-4.7",
@@ -7201,6 +8487,26 @@
    "estimate": 0.4932968000000001,
    "ci_low": 0.15012142857142857,
    "ci_high": 0.8143625714285715,
+   "boot_zero_success": 4,
+   "unpriced_runs": 0
+  },
+  "spend|grok/grok-4.7|C": {
+   "scope": "spend",
+   "model": "grok/grok-4.7",
+   "arm": "C",
+   "estimate": 2.785080285714286,
+   "ci_low": 1.5669715555555557,
+   "ci_high": 10.381254,
+   "boot_zero_success": 98,
+   "unpriced_runs": 0
+  },
+  "spend|grok/grok-4.7|D": {
+   "scope": "spend",
+   "model": "grok/grok-4.7",
+   "arm": "D",
+   "estimate": 2.4416022222222225,
+   "ci_low": 1.340319090909091,
+   "ci_high": 5.4023435,
    "boot_zero_success": 4,
    "unpriced_runs": 0
   },
@@ -7264,6 +8570,36 @@
    "boot_zero_success": 98,
    "unpriced_runs": 0
   },
+  "spend|openrouter/deepseek/deepseek-v4-pro-0813|B": {
+   "scope": "spend",
+   "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+   "arm": "B",
+   "estimate": 0.3093309,
+   "ci_low": 0.08312228666666667,
+   "ci_high": 1.2752890200000002,
+   "boot_zero_success": 98,
+   "unpriced_runs": 0
+  },
+  "spend|openrouter/deepseek/deepseek-v4-pro-0813|C": {
+   "scope": "spend",
+   "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+   "arm": "C",
+   "estimate": 1.4664304333333333,
+   "ci_low": 0.6004079550000001,
+   "ci_high": 3.88106968,
+   "boot_zero_success": 98,
+   "unpriced_runs": 0
+  },
+  "spend|openrouter/deepseek/deepseek-v4-pro-0813|D": {
+   "scope": "spend",
+   "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+   "arm": "D",
+   "estimate": 0.5035611711111111,
+   "ci_low": 0.26677296500000003,
+   "ci_high": 0.8428595120000001,
+   "boot_zero_success": 4,
+   "unpriced_runs": 0
+  },
   "spend|openrouter/google/gemini-3.1-pro-preview|B": {
    "scope": "spend",
    "model": "openrouter/google/gemini-3.1-pro-preview",
@@ -7271,6 +8607,26 @@
    "estimate": 0.3360514857142857,
    "ci_low": 0.0774878,
    "ci_high": 1.6200384,
+   "boot_zero_success": 98,
+   "unpriced_runs": 0
+  },
+  "spend|openrouter/google/gemini-3.1-pro-preview|C": {
+   "scope": "spend",
+   "model": "openrouter/google/gemini-3.1-pro-preview",
+   "arm": "C",
+   "estimate": 1.2096476,
+   "ci_low": 0.4249313428571429,
+   "ci_high": 2.5365089333333333,
+   "boot_zero_success": 98,
+   "unpriced_runs": 0
+  },
+  "spend|openrouter/google/gemini-3.1-pro-preview|D": {
+   "scope": "spend",
+   "model": "openrouter/google/gemini-3.1-pro-preview",
+   "arm": "D",
+   "estimate": 1.45798055,
+   "ci_low": 0.5647680749999999,
+   "ci_high": 3.8847078666666675,
    "boot_zero_success": 98,
    "unpriced_runs": 0
   }
@@ -14495,7 +15851,7 @@
  },
  "grading_cost": {
   "note": "Judge model cost from log-level stats; not part of any arm's cost.",
-  "total_usd": 25.865799,
+  "total_usd": 26.868033,
   "unpriced_judges": [],
   "per_log": [
    {
@@ -15033,6 +16389,30 @@
     }
    },
    {
+    "log": "2026-10-04T06-23-05-00-00_spend-bench_8pbr32kQHy5PEn4ufkFTe2.eval",
+    "model": "google/gemini-3.8-flash",
+    "arm": "B",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.036324
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-05-00-00_spend-bench_AYp9cqcEzdxJgc4jHAEMmS.eval",
+    "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+    "arm": "B",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.094089
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-05-00-00_spend-bench_Dg47KzdUwhQt5rRPCQdE6N.eval",
+    "model": "grok/grok-4.7",
+    "arm": "C",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.127314
+    }
+   },
+   {
     "log": "2026-10-04T06-23-05-00-00_spend-bench_RQRbFqFd3bjDurXU6A8MC2.eval",
     "model": "openrouter/google/gemini-3.1-pro-preview",
     "arm": "B",
@@ -15046,6 +16426,62 @@
     "arm": "B",
     "grading_usd": {
      "anthropic/claude-opus-5-5": 0.140323
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_NaxsLf3GAYjhvVSj9U7xYX.eval",
+    "model": "grok/grok-4.7",
+    "arm": "D",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.245564
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_PhKphkNv3hjYPZS8TLtDiw.eval",
+    "model": "google/gemini-3.8-flash",
+    "arm": "D",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.058084
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_RF8V5Svon9SpPxuwV4UGvo.eval",
+    "model": "openrouter/google/gemini-3.1-pro-preview",
+    "arm": "D",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.089274
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_YhLAbtTmiD8EhQaxmM4yCa.eval",
+    "model": "openrouter/google/gemini-3.1-pro-preview",
+    "arm": "C",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.070976
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_cJhUKhbdoTxbjndw6ouBhu.eval",
+    "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+    "arm": "C",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.111067
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_d6PTfxMYebxxTphoqBRA7f.eval",
+    "model": "google/gemini-3.8-flash",
+    "arm": "C",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.057524
+    }
+   },
+   {
+    "log": "2026-10-04T06-23-06-00-00_spend-bench_oETxyMcaiXE5keuBPJAAHg.eval",
+    "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+    "arm": "D",
+    "grading_usd": {
+     "anthropic/claude-opus-5-5": 0.112018
     }
    }
   ]
@@ -15132,8 +16568,18 @@
    "2026-10-04T04-56-52-00-00_spend-bench_TZGHcF9h4UVDtbj8pdxd4h.eval",
    "2026-10-04T04-56-52-00-00_spend-bench_WtpzUEdVHLr9onWbjFMX6t.eval",
    "2026-10-04T04-56-52-00-00_spend-bench_m6nRJTnCdHa95ChVS9cd4s.eval",
+   "2026-10-04T06-23-05-00-00_spend-bench_8pbr32kQHy5PEn4ufkFTe2.eval",
+   "2026-10-04T06-23-05-00-00_spend-bench_AYp9cqcEzdxJgc4jHAEMmS.eval",
+   "2026-10-04T06-23-05-00-00_spend-bench_Dg47KzdUwhQt5rRPCQdE6N.eval",
    "2026-10-04T06-23-05-00-00_spend-bench_RQRbFqFd3bjDurXU6A8MC2.eval",
-   "2026-10-04T06-23-05-00-00_spend-bench_arfefUxSFKN28sJrvEcgVp.eval"
+   "2026-10-04T06-23-05-00-00_spend-bench_arfefUxSFKN28sJrvEcgVp.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_NaxsLf3GAYjhvVSj9U7xYX.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_PhKphkNv3hjYPZS8TLtDiw.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_RF8V5Svon9SpPxuwV4UGvo.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_YhLAbtTmiD8EhQaxmM4yCa.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_cJhUKhbdoTxbjndw6ouBhu.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_d6PTfxMYebxxTphoqBRA7f.eval",
+   "2026-10-04T06-23-06-00-00_spend-bench_oETxyMcaiXE5keuBPJAAHg.eval"
   ],
   "prices": "/Users/coledermott/agent-access-bench/prereg/model-prices.json",
   "fx": "/Users/coledermott/agent-access-bench/prereg/fx-rates.json",

@@ -631,10 +631,10 @@ def chart_spend(d: Data, ov: dict, src: str | None):
     hs = [Line2D([], [], color=INK, linewidth=2.5, label="Budget")]
     if "C" in arms:
         hs.append(Line2D([], [], marker=ARM_MARKER["C"], linestyle="", markersize=8, color=ACCENT,
-                         label="C: Locus Pro, capped (ledger)"))
+                         label="+ Locus Pro, funded with exactly the budget"))
     if "D" in arms:
         hs.append(arm_handle("D", hollow=True))
-        hs[-1].set_label("D: direct vendors (list-price estimate)")
+        hs[-1].set_label("+ 7 vendors wired directly (estimated)")
     legend_top(ax, hs, ncol=len(hs) if len(hs) <= 2 else 2)
     title = (f"Capped Locus Pro runs stayed within budget in {n_runs - breaches} of {n_runs} runs"
              if "C" in arms else "Spend against budget on the spend-safety tasks")
