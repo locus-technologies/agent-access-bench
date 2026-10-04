@@ -355,7 +355,9 @@ def chart_success(d: Data, ov: dict, src: str | None, social: bool = False):
     by = defaultdict(dict)
     for c in cells:
         by[c["model"]][c["arm"]] = c
-    arms = [a for a in ARM_ORDER if any(a in v for v in by.values())]
+    # D ran only on the tasks its vendors can serve, so its rate is not comparable to the other
+    # arms here; it gets its own same-task chart (07).
+    arms = [a for a in ("A", "B", "C") if any(a in v for v in by.values())]
     models = sorted(by, key=lambda m: (-(by[m].get("B", {}).get("success_rate") or -1), m))
     n_rows = len(models)
     step = 1.0
@@ -651,6 +653,41 @@ def chart_spend(d: Data, ov: dict, src: str | None):
 # --- 06 by battery ---------------------------------------------------------------------------------
 
 
+def chart_vendors(d: Data, ov: dict, src: str | None):
+    """Locus Pro vs vendors wired directly, on exactly the data tasks arm D ran (same tasks, same epochs)."""
+    h1 = {"gtm", "paiddata", "multistep", "travel", "structured-hostile"}
+    d_tasks = {r["task"] for r in d.runs if r["arm"] == "D"}
+    by = defaultdict(lambda: defaultdict(list))
+    for r in d.runs:
+        if r["battery"] in h1 and r["task"] in d_tasks and r["arm"] in ("B", "C", "D"):
+            by[r["model"]][r["arm"]].append(float(r["success"]))
+    rows = [(m, {a: sum(v) / len(v) for a, v in arms.items()}) for m, arms in by.items() if all(a in arms for a in "BCD")]
+    if not rows:
+        return None, "no models with B, C and D on the same tasks"
+    rows.sort(key=lambda r: -r[1]["C"])
+    n_tasks = len({r["task"] for r in d.runs if r["battery"] in h1 and r["task"] in d_tasks})
+    fig, ax = new_fig(1.4 + 0.42 * len(rows))
+    style_axes(ax, "x")
+    for i, (m, v) in enumerate(rows):
+        y = -i
+        ax.plot([min(v["C"], v["D"]), max(v["C"], v["D"])], [y, y], color=GRID, linewidth=3, zorder=1, solid_capstyle="round")
+        for arm in ("B", "D", "C"):
+            ax.plot([v[arm]], [y], marker=ARM_MARKER[arm], markersize=9, color=ARM_COLOR[arm],
+                    markeredgecolor=SURFACE, markeredgewidth=2, linestyle="", zorder=3)
+    ax.set_yticks([-i for i in range(len(rows))], [short_model(m, d.names) for m, _ in rows])
+    ax.tick_params(axis="y", length=0)
+    ax.set_xlim(0, 1.0)
+    ax.set_ylim(-len(rows) + 0.4, 0.6)
+    ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    legend_top(ax, [arm_handle("B"), arm_handle("C"), arm_handle("D")])
+    text = {"title": "Locus Pro and seven vendors wired directly finish about the same share",
+            "subtitle": f"Success on the {n_tasks} data tasks those vendors can serve, same tasks for every setup.",
+            "xlabel": "Success rate", "ylabel": "",
+            "note": "Paired difference, Locus minus vendors: see the results tables (H3)."} | ov
+    finish(fig, ax, text, source_line(src, n_tasks, d.epochs(d.h1_runs()), d.pilot), plot_h=0.42 * len(rows))
+    return fig, None
+
+
 def chart_battery(d: Data, ov: dict, src: str | None):
     s = d.s
     rows = []  # (label, contrast, group)
@@ -736,6 +773,7 @@ def main() -> None:
         ("04-tool-definition-tokens", lambda: chart_tokens(d, ov("04-tool-definition-tokens"), src)),
         ("05-spend-vs-budget", lambda: chart_spend(d, ov("05-spend-vs-budget"), src)),
         ("06-by-battery", lambda: chart_battery(d, ov("06-by-battery"), src)),
+        ("07-locus-vs-vendors", lambda: chart_vendors(d, ov("07-locus-vs-vendors"), src)),
     ]
     for name, fn in jobs:
         fig, why = fn()

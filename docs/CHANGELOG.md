@@ -114,3 +114,9 @@
 - Gemini CLI is excluded from the harness-track results and charts. Its rows are kept in
   `results/raw/harness/superseded/`. A valid rerun needs the harness inside a container with
   no host filesystem, which is future work. The harness track reports five harnesses.
+
+## 2026-10-04 ~09:30Z: chart fix (presentation only)
+- Chart 01 drew arm D next to the other arms, but D ran only on the tasks its vendors can serve,
+  so its rates were computed over a different task set. That made the direct-vendor setup look
+  better than it is. D is removed from chart 01. Chart 07 compares B, C and D on the same 34
+  data tasks: C 76%, D 75%, B 54%. No numbers or analysis changed.
