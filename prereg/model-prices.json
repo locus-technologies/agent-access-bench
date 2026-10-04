@@ -1,88 +1,175 @@
 {
-  "description": "Model list prices in USD per 1M tokens, standard (non-batch, non-priority) tier, read from each provider's official pricing page. Used by bench/analyze.py to turn Inspect token usage into model cost. Keys are Inspect model ids exactly as they appear in log.eval.model.",
-  "unit": "USD per 1M tokens",
-  "token_conventions": {
-    "input": "Inspect ModelUsage.input_tokens: uncached input only (cache reads and writes are reported separately).",
-    "cache_write": "Inspect input_tokens_cache_write. Anthropic: the 5-minute write rate (Inspect's default cache TTL).",
-    "cache_read": "Inspect input_tokens_cache_read.",
-    "reasoning": "Every provider below bills reasoning/thinking tokens at the output rate. Inspect already counts them inside output_tokens for Anthropic, OpenAI, Google and OpenRouter; for xAI (grok provider) output_tokens excludes them. analyze.py detects which case applies from total_tokens arithmetic per call and adds reasoning at the output rate only when it is not already inside output_tokens.",
-    "long_context": "Where a provider prices long prompts higher, the tier applies per model call when that call's prompt (input + cache read + cache write) exceeds the threshold. analyze.py applies it per call from the sample's model events."
+ "description": "Model list prices in USD per 1M tokens, standard (non-batch, non-priority) tier, read from each provider's official pricing page. Used by bench/analyze.py to turn Inspect token usage into model cost. Keys are Inspect model ids exactly as they appear in log.eval.model.",
+ "unit": "USD per 1M tokens",
+ "token_conventions": {
+  "input": "Inspect ModelUsage.input_tokens: uncached input only (cache reads and writes are reported separately).",
+  "cache_write": "Inspect input_tokens_cache_write. Anthropic: the 5-minute write rate (Inspect's default cache TTL).",
+  "cache_read": "Inspect input_tokens_cache_read.",
+  "reasoning": "Every provider below bills reasoning/thinking tokens at the output rate. Inspect already counts them inside output_tokens for Anthropic, OpenAI, Google and OpenRouter; for xAI (grok provider) output_tokens excludes them. analyze.py detects which case applies from total_tokens arithmetic per call and adds reasoning at the output rate only when it is not already inside output_tokens.",
+  "long_context": "Where a provider prices long prompts higher, the tier applies per model call when that call's prompt (input + cache read + cache write) exceeds the threshold. analyze.py applies it per call from the sample's model events."
+ },
+ "models": {
+  "anthropic/claude-opus-5-5": {
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_write_1h": 8.0,
+   "cache_read": 0.2,
+   "reasoning": "output",
+   "long_context": null,
+   "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Cache hits on Opus 5.5 are 0.05x base input. Full 1M context at standard price (no long-context tier). Also the pinned judge for non-Anthropic agents."
   },
-  "models": {
-    "anthropic/claude-opus-5-5": {
-      "input": 4.0, "output": 20.0, "cache_write": 5.0, "cache_write_1h": 8.0, "cache_read": 0.2, "reasoning": "output",
-      "long_context": null,
-      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Cache hits on Opus 5.5 are 0.05x base input. Full 1M context at standard price (no long-context tier). Also the pinned judge for non-Anthropic agents."
-    },
-    "anthropic/claude-sonnet-5-5": {
-      "input": 2.0, "output": 10.0, "cache_write": 2.5, "cache_write_1h": 4.0, "cache_read": 0.2, "reasoning": "output",
-      "long_context": null,
-      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "No long-context tier."
-    },
-    "anthropic/claude-haiku-4-5": {
-      "input": 1.0, "output": 5.0, "cache_write": 1.25, "cache_write_1h": 2.0, "cache_read": 0.1, "reasoning": "output",
-      "long_context": null,
-      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Alias resolves to claude-haiku-4-5-20251001 (smoke check 2026-10-03)."
-    },
-    "openai/gpt-6.1-sol": {
-      "input": 2.0, "output": 10.0, "cache_write": 2.5, "cache_read": 0.1, "reasoning": "output",
-      "long_context": {"threshold_prompt_tokens": 272000, "input": 4.0, "output": 15.0, "cache_write": 5.0, "cache_read": 0.2},
-      "source": "https://developers.openai.com/api/docs/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Short context <=272K input tokens; long context >272K."
-    },
-    "openai/gpt-6-luna": {
-      "input": 0.1, "output": 0.5, "cache_write": 0.125, "cache_read": 0.01, "reasoning": "output",
-      "long_context": {"threshold_prompt_tokens": 272000, "input": 0.2, "output": 0.75, "cache_write": 0.25, "cache_read": 0.02},
-      "source": "https://developers.openai.com/api/docs/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Chosen as the small OpenAI model: newest small tier in the models API (gpt-6-luna; gpt-5.4-mini is a generation older at $0.75/$4.50)."
-    },
-    "google/gemini-3.1-pro-preview": {
-      "input": 2.0, "output": 12.0, "cache_write": null, "cache_read": 0.2, "reasoning": "output",
-      "long_context": {"threshold_prompt_tokens": 200000, "input": 4.0, "output": 18.0, "cache_write": null, "cache_read": 0.4},
-      "source": "https://ai.google.dev/gemini-api/docs/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Output price includes thinking tokens. No per-token cache write charge; explicit-cache storage ($4.50/1M tokens/hour) is not used by Inspect's implicit caching and is not modelled. The only current Pro text model in the Gemini models API (gemini-pro-latest is an alias)."
-    },
-    "google/gemini-3.8-flash": {
-      "input": 0.75, "output": 3.75, "cache_write": null, "cache_read": 0.075, "reasoning": "output",
-      "long_context": null,
-      "valid_through": "2026-12-31",
-      "source": "https://ai.google.dev/gemini-api/docs/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Introductory price through 2026-12-31; doubles to $1.50/$7.50 (cache $0.15) from 2027-01-01. Runs after that date need the new price. No prompt-length tier."
-    },
-    "grok/grok-4.7": {
-      "input": 2.0, "output": 6.0, "cache_write": null, "cache_read": 0.5, "reasoning": "output",
-      "long_context": {"threshold_prompt_tokens": 200000, "inclusive": true, "input": 4.0, "output": 12.0, "cache_write": null, "cache_read": 1.0},
-      "source": "https://docs.x.ai/developers/models",
-      "reasoning_source": "https://docs.x.ai/developers/advanced-api-usage/prompt-caching/usage-and-pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Long-context tier applies at >=200K prompt tokens. Reasoning tokens billed at the full completion price; Inspect's grok provider reports them outside output_tokens."
-    },
-    "openrouter/deepseek/deepseek-v4-pro-0813": {
-      "input": 0.22, "output": 4.2, "cache_write": null, "cache_read": 0.14, "reasoning": "output",
-      "long_context": null,
-      "is_estimate": true,
-      "source": "https://openrouter.ai/api/v1/models (model-level listed pricing); per-provider prices at https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro-0813/endpoints",
-      "retrieved": "2026-10-03",
-      "notes": "ESTIMATE. OpenRouter bills the routed provider's price, which varied across 19 providers on 2026-10-03 (input $0.176-$1.65, output $1.70-$4.95 per 1M; the first-party DeepSeek endpoint is $0.66/$1.98 with time-of-day peaks). Recorded price is OpenRouter's listed model price. To make this exact, pin a provider in the run (-M provider='{\"order\":[\"DeepSeek\"],\"allow_fallbacks\":false}') and replace these numbers with that provider's row. Open weights: deepseek-ai/DeepSeek-V4-Pro-0813 on Hugging Face."
-    }
+  "anthropic/claude-sonnet-5-5": {
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_write_1h": 4.0,
+   "cache_read": 0.2,
+   "reasoning": "output",
+   "long_context": null,
+   "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "No long-context tier."
   },
-  "judges": {
-    "openai/gpt-5.5": {
-      "input": 5.0, "output": 30.0, "cache_write": null, "cache_read": 0.5, "reasoning": "output",
-      "long_context": null,
-      "source": "https://developers.openai.com/api/docs/pricing",
-      "retrieved": "2026-10-03",
-      "notes": "Pinned judge for Anthropic agents (bench/graders.py). Judge cost is reported separately and is not part of agent cost. Long-context tier not checked (judge prompts are short)."
-    }
+  "anthropic/claude-haiku-4-5": {
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_write_1h": 2.0,
+   "cache_read": 0.1,
+   "reasoning": "output",
+   "long_context": null,
+   "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Alias resolves to claude-haiku-4-5-20251001 (smoke check 2026-10-03)."
+  },
+  "openai/gpt-6.1-sol": {
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "reasoning": "output",
+   "long_context": {
+    "threshold_prompt_tokens": 272000,
+    "input": 4.0,
+    "output": 15.0,
+    "cache_write": 5.0,
+    "cache_read": 0.2
+   },
+   "source": "https://developers.openai.com/api/docs/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Short context <=272K input tokens; long context >272K."
+  },
+  "openai/gpt-6-luna": {
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "reasoning": "output",
+   "long_context": {
+    "threshold_prompt_tokens": 272000,
+    "input": 0.2,
+    "output": 0.75,
+    "cache_write": 0.25,
+    "cache_read": 0.02
+   },
+   "source": "https://developers.openai.com/api/docs/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Chosen as the small OpenAI model: newest small tier in the models API (gpt-6-luna; gpt-5.4-mini is a generation older at $0.75/$4.50)."
+  },
+  "google/gemini-3.1-pro-preview": {
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": null,
+   "cache_read": 0.2,
+   "reasoning": "output",
+   "long_context": {
+    "threshold_prompt_tokens": 200000,
+    "input": 4.0,
+    "output": 18.0,
+    "cache_write": null,
+    "cache_read": 0.4
+   },
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Output price includes thinking tokens. No per-token cache write charge; explicit-cache storage ($4.50/1M tokens/hour) is not used by Inspect's implicit caching and is not modelled. The only current Pro text model in the Gemini models API (gemini-pro-latest is an alias)."
+  },
+  "google/gemini-3.8-flash": {
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": null,
+   "cache_read": 0.075,
+   "reasoning": "output",
+   "long_context": null,
+   "valid_through": "2026-12-31",
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Introductory price through 2026-12-31; doubles to $1.50/$7.50 (cache $0.15) from 2027-01-01. Runs after that date need the new price. No prompt-length tier."
+  },
+  "grok/grok-4.7": {
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": null,
+   "cache_read": 0.5,
+   "reasoning": "output",
+   "long_context": {
+    "threshold_prompt_tokens": 200000,
+    "inclusive": true,
+    "input": 4.0,
+    "output": 12.0,
+    "cache_write": null,
+    "cache_read": 1.0
+   },
+   "source": "https://docs.x.ai/developers/models",
+   "reasoning_source": "https://docs.x.ai/developers/advanced-api-usage/prompt-caching/usage-and-pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Long-context tier applies at >=200K prompt tokens. Reasoning tokens billed at the full completion price; Inspect's grok provider reports them outside output_tokens."
+  },
+  "openrouter/deepseek/deepseek-v4-pro-0813": {
+   "input": 0.22,
+   "output": 4.2,
+   "cache_write": null,
+   "cache_read": 0.14,
+   "reasoning": "output",
+   "long_context": null,
+   "is_estimate": true,
+   "source": "https://openrouter.ai/api/v1/models (model-level listed pricing); per-provider prices at https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro-0813/endpoints",
+   "retrieved": "2026-10-03",
+   "notes": "ESTIMATE. OpenRouter bills the routed provider's price, which varied across 19 providers on 2026-10-03 (input $0.176-$1.65, output $1.70-$4.95 per 1M; the first-party DeepSeek endpoint is $0.66/$1.98 with time-of-day peaks). Recorded price is OpenRouter's listed model price. To make this exact, pin a provider in the run (-M provider='{\"order\":[\"DeepSeek\"],\"allow_fallbacks\":false}') and replace these numbers with that provider's row. Open weights: deepseek-ai/DeepSeek-V4-Pro-0813 on Hugging Face."
+  },
+  "openrouter/google/gemini-3.1-pro-preview": {
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": null,
+   "cache_read": 0.2,
+   "reasoning": "output",
+   "long_context": {
+    "threshold_prompt_tokens": 200000,
+    "input": 4.0,
+    "output": 18.0,
+    "cache_write": null,
+    "cache_read": 0.4
+   },
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Output price includes thinking tokens. No per-token cache write charge; explicit-cache storage ($4.50/1M tokens/hour) is not used by Inspect's implicit caching and is not modelled. The only current Pro text model in the Gemini models API (gemini-pro-latest is an alias).",
+   "note": "Same model via OpenRouter (served by Google); OpenRouter list price $2/$12 per 1M tokens on 2026-10-04, matching Google's.",
+   "source_or": "https://openrouter.ai/api/v1/models"
   }
+ },
+ "judges": {
+  "openai/gpt-5.5": {
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": null,
+   "cache_read": 0.5,
+   "reasoning": "output",
+   "long_context": null,
+   "source": "https://developers.openai.com/api/docs/pricing",
+   "retrieved": "2026-10-03",
+   "notes": "Pinned judge for Anthropic agents (bench/graders.py). Judge cost is reported separately and is not part of agent cost. Long-context tier not checked (judge prompts are short)."
+  }
+ }
 }

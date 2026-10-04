@@ -42,7 +42,7 @@ LOCUS_SKILLS = ("locus", "locus-setup", "locus-workflows")
 DEFAULT_MODELS = {
     "claude-code": "claude-sonnet-5-5",
     "codex": "gpt-6.1-sol",
-    "gemini-cli": "gemini-3.1-pro-preview",
+    "gemini-cli": "gemini-3.8-flash",  # 3.1 Pro is capped at 250 requests/day on our key tier; see CHANGELOG
 }
 
 # Built-in tools each CLI gets in both arms (the realistic stock agent).
@@ -293,6 +293,14 @@ def _gemini(prompt: str, locus_mode: str, model: str, timeout_s: int) -> dict:
         "privacy": {"usageStatisticsEnabled": False},
         "telemetry": {"enabled": False},
         "mcpServers": {},
+        # The CLI's built-in web-search/web-fetch tools run on the gemini-3-flash-base alias
+        # (gemini-3-flash-preview), whose small daily quota ran out mid-run on 2026-10-04.
+        # Point that alias at the GA gemini-3.8-flash. Same tools, same arms, non-preview model.
+        "modelConfigs": {
+            "customAliases": {
+                "gemini-3-flash-base": {"extends": "base", "modelConfig": {"model": "gemini-3.8-flash"}},
+            }
+        },
     }
     if with_locus:
         env["LOCUS_PRO_API_KEY"] = os.environ["LOCUS_PRO_API_KEY"]

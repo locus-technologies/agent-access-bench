@@ -10,3 +10,30 @@
   text to the agent instead of raising.
 - Grading logic is unchanged. Completed samples are kept; errored and unfinished samples are
   rerun via eval_retry. No task, prompt, grader rule or arm changed.
+
+## 2026-10-04 ~02:50Z: Gemini CLI stream rescheduled
+- Gemini CLI runs its internal housekeeping (history compression, routing, loop checks) on
+  `gemini-3-flash-preview`, which hit its daily API quota ("You have exhausted your daily
+  quota on this model") on the shared Google key. That is a provider quota, not agent
+  behaviour. The benchmark model itself (gemini-3.1-pro-preview) was unaffected in direct
+  calls.
+- The gemini-cli+openclaw stream was stopped. Its partial results are in
+  `results/raw/harness/superseded/` and are excluded. OpenClaw restarted alone. Gemini CLI
+  reruns all three arms from scratch after the quota resets (00:00 PT = 07:00Z), so its arms
+  stay paired in time.
+
+## 2026-10-04 ~03:00Z: Gemini 3.1 Pro rerouted (supersedes the 02:50Z entry's diagnosis)
+- Real cause, from a `gemini --debug` run: Google enforces
+  `generate_requests_per_model_per_day, limit: 250, model: gemini-3.1-pro` on our API key
+  tier. The preview-flash helper theory in the 02:50Z entry was wrong. 250 requests a day
+  cannot support the core matrix or the harness track.
+- Core matrix: Gemini 3.1 Pro runs through OpenRouter as
+  `openrouter/google/gemini-3.1-pro-preview`. It is the same model, served by Google, at the
+  same list price ($2/$12 per 1M tokens). Logs: `logs/main-gpro`, `logs/main-d-gpro`.
+  Samples sent through the direct `google/gemini-3.1-pro-preview` route in `logs/main` and
+  `logs/main-d` are excluded from analysis.
+- Harness track: Gemini CLI can only call Google's API, so it runs on `gemini-3.8-flash` (GA)
+  instead of 3.1 Pro. This is a deviation from "each harness uses its native flagship model"
+  and is reported as such. Its helper-alias override (gemini-3-flash-base -> gemini-3.8-flash)
+  stays.
+- No task, prompt, grader rule or arm changed.
