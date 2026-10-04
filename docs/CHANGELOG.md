@@ -70,3 +70,6 @@
   Pro use `openrouter/google/gemini-3.1-pro-preview`, as in the core matrix. The remaining
   models (gemini-3.8-flash, grok-4.7, deepseek-v4-pro) run in parallel processes. Spend runs
   from the direct route are excluded with the same policy as the core.
+- 06:35Z addendum: `AioRpcError`, the gRPC error from xAI's client, is a provider error of the
+  same kind as `ModelGenerateError` and was added to the infrastructure list before any
+  rerun ran. Rerun plan: `results/rerun-plan.json` (42 samples).

@@ -1,0 +1,166 @@
+[
+ {
+  "model": "grok/grok-4.7",
+  "arm": "C",
+  "task_ids": [
+   "gtm-05",
+   "gtm-06",
+   "gtm-10"
+  ],
+  "epochs": 2
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "arm": "C",
+  "task_ids": [
+   "gtm-03",
+   "paiddata-02",
+   "paiddata-04",
+   "travel-01",
+   "travel-02"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+  "arm": "C",
+  "task_ids": [
+   "gtm-12"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "openai/gpt-6-luna",
+  "arm": "C",
+  "task_ids": [
+   "structured-10",
+   "structured-11",
+   "travel-02"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "anthropic/claude-haiku-4-5",
+  "arm": "C",
+  "task_ids": [
+   "multistep-02"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "openai/gpt-6.1-sol",
+  "arm": "C",
+  "task_ids": [
+   "control-05",
+   "multistep-02",
+   "travel-04"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "anthropic/claude-sonnet-5-5",
+  "arm": "C",
+  "task_ids": [
+   "paiddata-09",
+   "travel-04"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "anthropic/claude-opus-5-5",
+  "arm": "C",
+  "task_ids": [
+   "gtm-03"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "arm": "B",
+  "task_ids": [
+   "structured-10"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+  "arm": "B",
+  "task_ids": [
+   "structured-06"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "openai/gpt-6-luna",
+  "arm": "B",
+  "task_ids": [
+   "paiddata-05"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "anthropic/claude-haiku-4-5",
+  "arm": "B",
+  "task_ids": [
+   "structured-01",
+   "structured-04",
+   "structured-05",
+   "structured-06",
+   "structured-13"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "anthropic/claude-opus-5-5",
+  "arm": "B",
+  "task_ids": [
+   "multistep-05"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "anthropic/claude-sonnet-5-5",
+  "arm": "B",
+  "task_ids": [
+   "control-06",
+   "control-10",
+   "control-11",
+   "gtm-12",
+   "multistep-10"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "grok/grok-4.7",
+  "arm": "D",
+  "task_ids": [
+   "gtm-11"
+  ],
+  "epochs": 1
+ },
+ {
+  "model": "openrouter/deepseek/deepseek-v4-pro-0813",
+  "arm": "D",
+  "task_ids": [
+   "multistep-02"
+  ],
+  "epochs": 2
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "arm": "D",
+  "task_ids": [
+   "gtm-02",
+   "gtm-15"
+  ],
+  "epochs": 2
+ },
+ {
+  "model": "openai/gpt-6.1-sol",
+  "arm": "D",
+  "task_ids": [
+   "structured-13"
+  ],
+  "epochs": 1
+ }
+]

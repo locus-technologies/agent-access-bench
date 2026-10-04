@@ -392,7 +392,7 @@ def load_runs(log_dirs: list[str], prices: dict, tool_tokens: dict) -> tuple[lis
 EXCLUDED_MODELS = {"google/gemini-3.1-pro-preview"}  # rerouted via OpenRouter
 INFRA_ERROR = ("ConnectError", "ConnectTimeout", "Connection closed", "Error querying for running services",
                "Error reading docker config", "ev_poll_posix", "ModelGenerateError", "CancelledError", "RemoteProtocolError",
-               "ReadError")
+               "ReadError", "AioRpcError")
 
 
 def is_infra_error(err) -> bool:
