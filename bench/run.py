@@ -25,9 +25,10 @@ def main() -> None:
     p.add_argument("--max-samples", type=int, default=6)
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--max-tasks", type=int, default=8)
+    p.add_argument("--task-ids", default="")
     a = p.parse_args()
     # One process for every arm and model, so the shared search gate really is global.
-    tasks = [access_bench(arm=arm, batteries=a.batteries, d_only=a.d_only, epochs=a.epochs) for arm in a.arm.split(",")]
+    tasks = [access_bench(arm=arm, batteries=a.batteries, d_only=a.d_only, epochs=a.epochs, task_ids=a.task_ids) for arm in a.arm.split(",")]
     inspect_eval(
         tasks,
         model=a.model.split(","),

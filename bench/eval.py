@@ -42,8 +42,11 @@ def load_tasks(batteries: list[str], d_only: bool = False, harness_only: bool = 
 
 
 @task
-def access_bench(arm: str = "B", batteries: str = "pilot", d_only: bool = False, epochs: int = 3) -> Task:
+def access_bench(arm: str = "B", batteries: str = "pilot", d_only: bool = False, epochs: int = 3, task_ids: str = "") -> Task:
     tasks = load_tasks(batteries.split(","), d_only=d_only)
+    if task_ids:  # targeted reruns of infrastructure errors (CHANGELOG 2026-10-04 ~05:30Z)
+        wanted = set(task_ids.split(","))
+        tasks = [t for t in tasks if t.id in wanted]
     dataset = MemoryDataset([
         Sample(id=t.id, input=t.prompt, metadata={"task": json.loads(t.model_dump_json()), "arm": arm})
         for t in tasks

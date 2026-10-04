@@ -54,3 +54,12 @@
   `success`; one sample per (model, arm, task, epoch); exclude
   `google/gemini-3.1-pro-preview` (rerouted). Interrupted partial logs (status
   `started`/`error`) are kept for audit but not scored.
+
+## 2026-10-04 ~05:30Z: rule for infrastructure errors (written before their reruns)
+- Samples that errored for infrastructure reasons are rerun once at the end of the run, in
+  `logs/rerun`, and the rerun replaces the errored sample for that (model, arm, task, epoch).
+  The reasons: Docker daemon or config errors, MCP `ConnectError` / `Connection closed`,
+  provider `ModelGenerateError`, and `CancelledError` from the interruption.
+- If the rerun also errors, the sample counts as a failure. Agent timeouts and message-limit
+  hits are never rerun; they are failures as pre-registered.
+- At the time of writing, 28 such samples exist across arms B, C and D, out of about 6,800.
