@@ -73,3 +73,13 @@
 - 06:35Z addendum: `AioRpcError`, the gRPC error from xAI's client, is a provider error of the
   same kind as `ModelGenerateError` and was added to the infrastructure list before any
   rerun ran. Rerun plan: `results/rerun-plan.json` (42 samples).
+
+## 2026-10-04 ~07:00Z: human audit size (deviation, recorded before any review)
+- The pre-registration says to audit "a random 15% of graded runs". 15% of the ~7,700 scored
+  core runs is ~1,150 items, more than a few hours of human review.
+- Instead we audit a fixed sample of 250 items: 220 from the core matrix and 30 from the
+  harness track. The sample is stratified by arm, and grader types are weighted toward those
+  judged by an LLM or a verifier (claims, person_email, flight) because deterministic exact and
+  number matches rarely disagree. The agreement rate is reported both as sampled and
+  reweighted to the full population of runs. Sample seed: sha256("agent-access-bench-audit-v1").
+- If the reviewer chooses, the full 15% can still be audited later with the same page.
