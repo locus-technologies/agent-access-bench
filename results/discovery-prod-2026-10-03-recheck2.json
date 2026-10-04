@@ -1,0 +1,893 @@
+[
+ {
+  "battery": "dev",
+  "q": "what does this screenshot say",
+  "gold": [
+   "mathpix/process-image"
+  ],
+  "top5": [
+   "mathpix/process-image"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "make me a picture of a cat wearing a hat",
+  "gold": [
+   "fal/generate",
+   "grok/image-generate",
+   "openai/image-generate",
+   "stability-ai/generate-core",
+   "stability-ai/generate-sd3",
+   "stability-ai/generate-ultra"
+  ],
+  "top5": [
+   "openai/image-generate",
+   "grok/image-generate",
+   "replicate/run"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "turn coordinates into an address",
+  "gold": [
+   "mapbox/geocode-reverse",
+   "openweather/reverse-geocode"
+  ],
+  "top5": [
+   "mapbox/geocode-reverse"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "pull the pricing table off this website",
+  "gold": [
+   "firecrawl/extract",
+   "parallel/extract",
+   "tavily/extract"
+  ],
+  "top5": [
+   "x402-stablebrowser-session-extract/call",
+   "parse-dotdb-com-api-6d60c8a4/get_pricing"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "how much could i rent my house for",
+  "gold": [
+   "rentcast/rent-estimate"
+  ],
+  "top5": [
+   "rentcast/rent-estimate"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "is this file dangerous",
+  "gold": [
+   "virustotal/analysis",
+   "virustotal/file-report"
+  ],
+  "top5": [
+   "virustotal/file-report"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "how much is apple stock right now",
+  "gold": [
+   "alphavantage/global-quote"
+  ],
+  "top5": [
+   "parse-ca-finance-yahoo-com-api-164807ce/get_stock_quote",
+   "parse-finanzen-net-api-a3c12eb5/get_current_price",
+   "parse-morningstar-com-api-5e7bee19/get_stock_quote"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "transcribe this podcast episode for me",
+  "gold": [
+   "deepgram/transcribe"
+  ],
+  "top5": [
+   "deepgram/transcribe"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "write me a song about summer",
+  "gold": [
+   "suno/generate-lyrics",
+   "suno/generate-music"
+  ],
+  "top5": [
+   "suno/generate-lyrics",
+   "suno/generate-music"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "will this email bounce",
+  "gold": [
+   "hunter/email-verifier",
+   "zerobounce/validate-batch",
+   "zerobounce/validate-email"
+  ],
+  "top5": [
+   "zerobounce/validate-email",
+   "zerobounce/validate-batch"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "check if this person is on a sanctions list",
+  "gold": [
+   "ofac/screen",
+   "ofac/search"
+  ],
+  "top5": [
+   "ofac/screen",
+   "ofac/search"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "is it going to rain tomorrow",
+  "gold": [
+   "openweather/current-weather",
+   "openweather/forecast-5day",
+   "openweather/onecall",
+   "openweather/weather-overview"
+  ],
+  "top5": [
+   "openweather/weather-overview",
+   "openweather/forecast-5day"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "run this python snippet and show me the output",
+  "gold": [
+   "e2b/run-command",
+   "judge0/execute-code",
+   "judge0/submit-code"
+  ],
+  "top5": [
+   "judge0/execute-code",
+   "judge0/submit-code",
+   "e2b/run-command"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "say this in french",
+  "gold": [
+   "deepl/translate"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "take a picture of this webpage",
+  "gold": [
+   "screenshotone/take"
+  ],
+  "top5": [
+   "screenshotone/take",
+   "x402-screenshots-underscoredone-com-capture/call"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "what is the square root of 1764",
+  "gold": [
+   "wolframalpha/full-results",
+   "wolframalpha/short-answer"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "who is hiring engineers right now",
+  "gold": [
+   "apollo/job-postings",
+   "diffbot/job",
+   "sumble/jobs"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "dev",
+  "q": "where is this ip address located",
+  "gold": [
+   "ipinfo/ip-lite"
+  ],
+  "top5": [
+   "x402-api-interzoid-com-getipprofile/call",
+   "virustotal/ip-report",
+   "ipinfo/ip-lite"
+  ],
+  "hit1": false,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "read the handwriting in this photo",
+  "gold": [
+   "mathpix/process-image",
+   "mathpix/process-strokes"
+  ],
+  "top5": [
+   "mathpix/process-image"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "remove the background from this photo",
+  "gold": [
+   "stability-ai/remove-background"
+  ],
+  "top5": [
+   "stability-ai/remove-background",
+   "x402-deepai-pay-zeroclick-io-api-background-remover/call",
+   "stability-ai/replace-background-and-relight"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "what are the lat long for this address",
+  "gold": [
+   "mapbox/geocode-forward",
+   "openweather/geocode"
+  ],
+  "top5": [
+   "mapbox/geocode-forward",
+   "x402-2s-io-api-geocode-address/call"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "grab all the text from this url",
+  "gold": [
+   "firecrawl/batch-scrape",
+   "firecrawl/scrape",
+   "parallel/extract",
+   "tavily/extract"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "what is my home worth",
+  "gold": [
+   "rentcast/value-estimate"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "check if this website is malicious",
+  "gold": [
+   "virustotal/domain-report",
+   "virustotal/url-report",
+   "virustotal/url-scan"
+  ],
+  "top5": [
+   "parse-kerberus-com-api-97b26a31/scan_domain"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "what is bitcoin worth today",
+  "gold": [
+   "coingecko/coin-data",
+   "coingecko/coins-markets",
+   "coingecko/simple-price"
+  ],
+  "top5": [
+   "parse-ca-finance-yahoo-com-api-164807ce/get_bitcoin_price",
+   "parse-bitcoinwell-com-api-63ea9ea4/get_bitcoin_price_usd",
+   "x402-store-agentexchange-work-crypto-prices/call",
+   "x402-api-myceliasignal-com-oracle-price-btc-usd/call",
+   "parse-bitcointreasuries-net-api-6b0e3ae5/get_btc_price"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "read this paragraph out loud in a natural voice",
+  "gold": [
+   "deepgram/speak",
+   "deepgram/speak-flux",
+   "elevenlabs/tts",
+   "grok/tts",
+   "openai/tts"
+  ],
+  "top5": [
+   "deepgram/speak",
+   "openai/tts",
+   "grok/tts",
+   "elevenlabs/tts",
+   "deepgram/speak-flux"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "make this image bigger without losing quality",
+  "gold": [
+   "stability-ai/upscale-conservative",
+   "stability-ai/upscale-creative",
+   "stability-ai/upscale-fast"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "find the email address for someone at this company",
+  "gold": [
+   "hunter/domain-search",
+   "hunter/email-finder",
+   "prospeo/enrich-person"
+  ],
+  "top5": [
+   "hunter/domain-search",
+   "mpp-orth-tomba/call",
+   "x402-x402-orthogonal-com-leadsforge-enrichment-email/call",
+   "locus-gtm/enrich",
+   "sumble/people"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "what tools does this company use",
+  "gold": [
+   "builtwith/domain",
+   "sumble/organization-tech-stack",
+   "sumble/technology-find"
+  ],
+  "top5": [
+   "builtwith/domain",
+   "sumble/organizations",
+   "prospeo/enrich-company",
+   "hunter/company-enrichment",
+   "mpp-orth-company-enrich/call"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "how bad is the air quality here",
+  "gold": [
+   "openweather/air-quality"
+  ],
+  "top5": [
+   "openweather/air-quality",
+   "parse-iqair-com-api-c60726f6/get_city_air_quality"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "how long does it take to drive between these two places",
+  "gold": [
+   "mapbox/directions",
+   "mapbox/matrix"
+  ],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "look up recent news about this topic",
+  "gold": [
+   "apollo/news-search",
+   "brave/news-search",
+   "perplexity/search",
+   "router/web-search",
+   "tavily/search"
+  ],
+  "top5": [
+   "parse-financialjuice-com-api-f4e4a6f6/search_news",
+   "alphavantage/news-sentiment",
+   "parse-jinse-cn-api-07755345/search_news",
+   "parse-financialjuice-com-api-f4e4a6f6/get_news_feed"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "find me a cheap flight to tokyo",
+  "gold": [
+   "locus-travel/flight-search"
+  ],
+  "top5": [
+   "locus-travel/flight-search",
+   "parse-skiplagged-com-api-3bb9c6c3/search_flights",
+   "parse-skyscanner-co-in-api-d41780f4/search_flights",
+   "parse-us-trip-com-api-c1d04f29/search_flights"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "tell me about this company",
+  "gold": [
+   "apollo/org-enrichment",
+   "hunter/company-enrichment",
+   "prospeo/enrich-company",
+   "sumble/organizations"
+  ],
+  "top5": [
+   "parse-dnb-com-api-2815285a/get_company_profile",
+   "parse-indeed-com-api-ef57dcec/get_company_profile",
+   "prospeo/enrich-company",
+   "x402-x402-orthogonal-com-findymail-api-search-company/call",
+   "parse-procore-com-api-2acfed62/get_company_details"
+  ],
+  "hit1": false,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "find posts about ai on twitter",
+  "gold": [
+   "x/tweet-search-recent"
+  ],
+  "top5": [
+   "x402-glim-sh-api-v1-twitter-search/call",
+   "x402-x402-agentutility-ai-twitter-search/call",
+   "x402-api-socialfetch-dev-v1-twitter-search/call",
+   "x402-x402-agentutility-ai-tweets-search/call",
+   "grok/x-search"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "heldout",
+  "q": "erase an object out of this picture",
+  "gold": [
+   "stability-ai/erase",
+   "stability-ai/inpaint"
+  ],
+  "top5": [
+   "stability-ai/erase",
+   "grok/image-edit"
+  ],
+  "hit1": true,
+  "hit5": true,
+  "match_quality": [
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "find an available domain name to register",
+  "gold": [],
+  "top5": [
+   "parse-domains-cloudflare-com-api-9d7a792c/search_domains",
+   "parse-instantdomainsearch-com-api-ab14e50c/search_domains",
+   "parse-namegrep-com-api-f5160805/search_domains"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "look up LinkedIn people",
+  "gold": [],
+  "top5": [
+   "parse-linkedin-com-api-c0972802/search_people",
+   "sumble/people",
+   "x402-vaaya-ai-api-run-signalbase-people/call",
+   "apollo/people-enrichment",
+   "x402-stableenrich-dev-api-pdl-people-enrich/call"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "get a map of paris",
+  "gold": [],
+  "top5": [
+   "mapbox/static-image"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "find jobs at mcdonalds",
+  "gold": [],
+  "top5": [
+   "parse-indeed-com-api-ef57dcec/search_jobs",
+   "parse-cryptonomads-org-api-569f645a/list_jobs",
+   "parse-shine-com-api-1503f992/search_jobs",
+   "parse-uk-indeed-com-api-d4c1acb5/search_jobs",
+   "parse-id-indeed-com-api-34c65013/search_jobs"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "search for products on walmart",
+  "gold": [],
+  "top5": [
+   "parse-walmart-com-api-0f0af915/search_products",
+   "parse-walmart-ca-api-d90c71b1/search_products",
+   "router/commerce-search",
+   "parse-walmart-com-mx-api-dc1a40dc/search_products"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "who owns this domain",
+  "gold": [],
+  "top5": [
+   "virustotal/domain-report"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "search companies house filings",
+  "gold": [],
+  "top5": [
+   "parse-companieshouse-gov-uk-api-5a384d9d/get_company_filing_history",
+   "parse-find-and-update-company-information-service-gov-uk-api-b66cbdd7/get_company_filing_history",
+   "x402-api-eckari-com-v1-companies-uk-search/call"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "analyze my competitors website traffic",
+  "gold": [],
+  "top5": [
+   "dataforseo/dataforseo-labs-google-bulk-traffic-estimation",
+   "dataforseo/dataforseo-labs-google-competitors-domain",
+   "dataforseo/dataforseo-labs-google-historical-bulk-traffic-estimation",
+   "parse-similarweb-com-api-9b60e939/get_website_info"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "get instagram profile followers",
+  "gold": [],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "search reddit comments",
+  "gold": [],
+  "top5": [
+   "mpp-orth-scrapecreators/call"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "get flight status for united",
+  "gold": [],
+  "top5": [
+   "parse-united-com-api-780bf9fc/get_flight_status"
+  ],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [
+   null
+  ],
+  "reason": null
+ },
+ {
+  "battery": "adjacent",
+  "q": "list files on google drive",
+  "gold": [],
+  "top5": [],
+  "hit1": false,
+  "hit5": false,
+  "match_quality": [],
+  "reason": null
+ }
+]

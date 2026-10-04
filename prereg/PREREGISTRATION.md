@@ -1,11 +1,33 @@
 # Pre-registration: Does the same agent get more done with Locus Pro?
 
-Status: **DRAFT v0.2 (2026-10-03)**. This file is frozen by a tagged commit (`prereg-v1`)
+Status: **FROZEN v1 (2026-10-03)**, approved by Cole Dermott. This file is frozen by a tagged commit (`prereg-v1`)
 before the first arm-C run of the full benchmark. Every change after the freeze is logged in
 `CHANGELOG.md` with its reason.
 
 Run by Locus (the company that makes Locus Pro). The harness, tasks, graders, raw logs and
 analysis code are all published, so anyone can rerun this with their own keys.
+
+## 0. Frozen parameters
+
+- Locus Pro production commit: `69b44b222fd615cf9b74238feeb879d35dfbff00` (task definitions
+  `locus-wallet:143` and `locus-pro-prod-customer-api:79`). Runs served by any other commit are
+  rerun.
+- Semantic tool discovery is on in production. Pre-registered tool-search eval at this commit,
+  full enablement:
+  - held-out recall@1 9/18, recall@5 10/18
+  - dev recall@1 12/18, recall@5 13/18
+  - adjacent 0/12
+
+  The same eval read 4/18 and 8/18 held-out on `05a699e` earlier the same day
+  (`results/discovery-prod-2026-10-03*.json`).
+- Enablement: 15,988 of 16,261 endpoints enabled, plus all six curated tools
+  (`prereg/enablement-snapshot.json`).
+- Models and prices: `prereg/models.json` and `prereg/model-prices.json`. FX rates:
+  `prereg/fx-rates.json`.
+- Tool-definition tokens per request (claude-sonnet-5-5 tokenizer): B 763, C 17,104,
+  D 79,648 (`results/tool-definition-tokens.json`).
+- Server instructions: `prereg/server-instructions.json`.
+- Tasks: 82 scored (`tasks/*.jsonl`, excluding `pilot.jsonl`), frozen at this tag.
 
 ## 1. Question
 

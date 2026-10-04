@@ -1,6 +1,6 @@
 {
   "model": "claude-sonnet-5-5",
-  "measured_at": "2026-10-03T23:39:21Z",
+  "measured_at": "2026-10-04T01:59:29Z",
   "method": "count_tokens(messages=[hi], tools=arm tools) minus count_tokens without tools",
   "arms": {
     "B": {
