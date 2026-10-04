@@ -37,3 +37,11 @@
   and is reported as such. Its helper-alias override (gemini-3-flash-base -> gemini-3.8-flash)
   stays.
 - No task, prompt, grader rule or arm changed.
+
+## 2026-10-04 ~03:20Z: missing arms launched
+- `eval_retry` resumes only tasks that already had a log. When the core and D processes were
+  stopped at about 02:40Z, only arm A (9 models) and arm D (3 Anthropic models) had started,
+  so arms B and C (8 models) and arm D (5 models) were never queued by the resume.
+- Launched them: `logs/main-bc` (B and C, 8 models) and `logs/main-d2` (D, 5 models). Same
+  code, tasks and settings. Gemini 3.1 Pro runs every arm in `logs/main-gpro` and
+  `logs/main-d-gpro`.
