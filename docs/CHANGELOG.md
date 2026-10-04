@@ -87,4 +87,4 @@
 ## 2026-10-04 ~06:55Z: OpenClaw stream stopped
 - The OpenClaw harness process wrote no output for about 1 h 45 min after its 206th of 207
   runs. Its per-run timeout did not fire, so the process was stopped by hand. The one missing
-  run is listed above and excluded; task-level means use the remaining epochs.
+  run (paiddata-06, arm C, epoch 1) is excluded; task-level means use the remaining epochs.
