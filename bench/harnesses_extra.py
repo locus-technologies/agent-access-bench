@@ -43,7 +43,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-HARNESS_HOME = ROOT / ".harness-home"
+HARNESS_HOME = Path("/tmp/agent-access-bench-harness-home")  # outside the repo (.env); see CHANGELOG
 TRACE_ROOT = ROOT / "results" / "raw" / "harness_traces"
 
 NODE24_BIN = Path("/opt/homebrew/opt/node@24/bin")  # openclaw needs node 24.16+ or 26.1+

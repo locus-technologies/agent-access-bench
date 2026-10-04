@@ -88,3 +88,18 @@
 - The OpenClaw harness process wrote no output for about 1 h 45 min after its 206th of 207
   runs. Its per-run timeout did not fire, so the process was stopped by hand. The one missing
   run (paiddata-06, arm C, epoch 1) is excluded; task-level means use the remaining epochs.
+
+## 2026-10-04 ~08:10Z: Gemini CLI baseline contaminated; rerun
+- Gemini CLI loads `.env` files from the working directory's parent directories. The harness
+  work directories were inside the repo, so Gemini CLI loaded the repo `.env`, including the
+  Locus Pro execution key, the Locus admin key and the benchmark Tavily key, into its shell
+  environment. In arm B, 13 of 68 Gemini CLI traces reach Locus (paywithlocus.com), and 9
+  contain an `env` dump. Arm B for Gemini CLI is therefore invalid.
+- No stock-arm trace from the other five harnesses mentions Locus. The core matrix is
+  unaffected: its tools run in Docker without the host environment.
+- Fix: every harness home and work directory now lives under
+  `/tmp/agent-access-bench-harness-home`, outside the repo. A check run shows Gemini CLI sees
+  only GEMINI_API_KEY. The 68 contaminated rows are in
+  `results/raw/harness/superseded/gemini-cli-B-contaminated.jsonl`. Gemini CLI arm B is rerun
+  in full.
+- The exposed keys went into Gemini model context and are being rotated.

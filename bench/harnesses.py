@@ -29,7 +29,9 @@ from pathlib import Path
 from bench.secrets import load_secrets
 
 ROOT = Path(__file__).resolve().parent.parent
-HOME_ROOT = ROOT / ".harness-home"
+# Outside the repo: Gemini CLI loads .env files from parent directories, and the repo .env
+# holds the benchmark keys (CHANGELOG 2026-10-04 ~08:10Z).
+HOME_ROOT = Path("/tmp/agent-access-bench-harness-home")
 NODE_BIN = ROOT / "harnesses" / "node" / "node_modules" / ".bin"
 TRACE_ROOT = ROOT / "results" / "raw" / "harness"
 
