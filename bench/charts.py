@@ -61,14 +61,14 @@ ACCENT = "#6D28D9"
 # design, since they are emphasis grays). Marker shape is the secondary encoding.
 ARM_COLOR = {"A": "#8E8E96", "B": "#2B2B30", "C": ACCENT, "D": "#5E5E66", "C-mcp-only": "#8E8E96"}
 ARM_MARKER = {"A": "o", "B": "s", "C": "D", "D": "^", "C-mcp-only": "o"}
-ARM_LABEL = {"A": "A: no tools", "B": "B: stock agent", "C": "C: + Locus Pro",
-             "D": "D: + direct vendors", "C-mcp-only": "Locus MCP only"}
+ARM_LABEL = {"A": "No tools", "B": "Web search only", "C": "+ Locus Pro", "D": "+ 7 vendors wired directly",
+             "C-mcp-only": "+ Locus MCP server only"}
 ARM_ORDER = ("A", "B", "C", "D")
 STOCK_GRAY = "#D4D4D8"
 VENDOR_GRAYS = ("#3F3F46", "#71717A")
 
-BATTERY_LABEL = {"gtm": "GTM", "paiddata": "Paid data", "multistep": "Multi-step", "travel": "Travel",
-                 "structured-hostile": "Structured, bot-hostile", "structured-public": "Structured, public",
+BATTERY_LABEL = {"gtm": "Contact research", "paiddata": "Paid data", "multistep": "Multi-step research",
+                 "travel": "Flights", "structured-hostile": "Bot-hostile pages", "structured-public": "Public data APIs",
                  "control": "Control", "pilot": "Pilot", "spend": "Spend"}
 HARNESS_LABEL = {"claude-code": "Claude Code", "codex": "Codex CLI", "gemini-cli": "Gemini CLI",
                  "openclaw": "OpenClaw", "hermes": "Hermes", "openai-agents": "OpenAI Agents SDK"}
@@ -478,47 +478,45 @@ def chart_harness(d: Data, ov: dict, src: str | None, n_boot: int):
 
 
 def chart_cost(d: Data, ov: dict, src: str | None):
+    """Dumbbell per model: cost per successful task, web search only (B) -> + Locus Pro (C), on the
+    access batteries, with the success gain printed at the right. Readable at phone width."""
     cells, cps = d.s.get("cells", {}), d.s.get("cost_per_success", {})
-    pts = []
+    by_model: dict[str, dict] = {}
     for k, c in cells.items():
         p = cps.get(k, {})
-        if c["scope"] == "h1" and p.get("estimate") and c.get("success_rate"):
-            pts.append((c, p))
-    if not pts:
-        return None, "no priced h1 cells with successes"
-    fig, ax = new_fig(5.4)
-    style_axes(ax, "both")
-    ax.grid(True, axis="both", color=GRID, linewidth=1)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
+        if c["scope"] == "h1" and c["arm"] in ("B", "C") and p.get("estimate"):
+            by_model.setdefault(c["model"], {})[c["arm"]] = (c, p)
+    rows = [(m, v["B"], v["C"]) for m, v in by_model.items() if "B" in v and "C" in v]
+    if not rows:
+        return None, "no models with priced B and C cells"
+    rows.sort(key=lambda r: r[2][1]["estimate"])
+    fig, ax = new_fig(1.4 + 0.42 * len(rows))
+    style_axes(ax, "x")
     ax.set_xscale("log")
-    arms = [a for a in ARM_ORDER if any(c["arm"] == a for c, _ in pts)]
-    labels: list[tuple] = []
-    for c, p in pts:
-        a = c["arm"]
-        col = ARM_COLOR[a]
-        ax.errorbar(p["estimate"], c["success_rate"], xerr=ci_err(p["estimate"], p["ci_low"], p["ci_high"]),
-                    yerr=ci_err(c["success_rate"], c["wilson_low"], c["wilson_high"]),
-                    fmt="none", ecolor=col, elinewidth=1.5, alpha=0.35, capsize=0, zorder=2)
-        ax.plot([p["estimate"]], [c["success_rate"]], marker=ARM_MARKER[a], markersize=9, color=col,
-                markeredgecolor=SURFACE, markeredgewidth=2, linestyle="", zorder=3)
-        if a == "C":  # sparing: only the accent arm carries model names
-            labels.append((p["estimate"], c["success_rate"], short_model(c["model"], d.names), INK if a == "C" else INK_2))
-    ax.set_ylim(0, 1.05)
-    ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    for i, (m, (cb, pb), (cc, pc)) in enumerate(rows):
+        y = -i
+        ax.plot([pb["estimate"], pc["estimate"]], [y, y], color=GRID, linewidth=3, zorder=1, solid_capstyle="round")
+        for arm, p in (("B", pb), ("C", pc)):
+            ax.plot([p["estimate"]], [y], marker=ARM_MARKER[arm], markersize=9, color=ARM_COLOR[arm],
+                    markeredgecolor=SURFACE, markeredgewidth=2, linestyle="", zorder=3)
+        gain = 100 * (cc["success_rate"] - cb["success_rate"])
+        ax.annotate(f"{gain:+.0f} pts success", (1, y), xycoords=("axes fraction", "data"), xytext=(6, 0),
+                    textcoords="offset points", va="center", ha="left", fontsize=10, color=INK_2, annotation_clip=False)
+    ax.set_yticks([-i for i in range(len(rows))], [short_model(m, d.names) for m, _, _ in rows])
+    ax.tick_params(axis="y", length=0)
+    lo = min(min(r[1][1]["estimate"], r[2][1]["estimate"]) for r in rows)
+    hi = max(max(r[1][1]["estimate"], r[2][1]["estimate"]) for r in rows)
+    ax.set_xlim(lo / 1.5, hi * 1.5)
+    ax.set_ylim(-len(rows) + 0.4, 0.6)
     ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"${v:,.2f}" if v < 1 else f"${v:,.0f}"))
-    lo = min(p["ci_low"] or p["estimate"] for _, p in pts)
-    hi = max(p["ci_high"] or p["estimate"] for _, p in pts)
-    ax.set_xlim(lo / 1.6, hi * 1.6)
-    legend_top(ax, [arm_handle(a) for a in arms])
-    n_tasks = max(c["n_tasks"] for c, _ in pts)
-    text = {"title": "What each arm pays per successful task, and how often it succeeds",
-            "subtitle": "Up and to the left is better. Each point is one arm with one model on the access batteries.",
-            "xlabel": "Cost per successful task (USD, log scale)", "ylabel": "Success rate",
-            "note": "Cost = model tokens at list price + Locus charges + direct-vendor list-price estimate (D). "
-                    "Whiskers: 95% CIs (cost: cluster bootstrap over tasks; success: Wilson)."} | ov
-    finish(fig, ax, text, source_line(src, n_tasks, d.epochs(d.h1_runs()), d.pilot), plot_h=3.4)
-    place_labels(ax, labels)
+    legend_top(ax, [arm_handle("B"), arm_handle("C")])
+    n_tasks = max(r[1][0]["n_tasks"] for r in rows)
+    text = {"title": "What each finished task costs, with and without Locus Pro",
+            "subtitle": "Cost per successful task on data tasks: model tokens at list price plus Locus data fees.",
+            "xlabel": "Cost per successful task (USD, log scale)", "ylabel": "",
+            "note": "Point estimates; 95% intervals are in the results tables."} | ov
+    finish(fig, ax, text, source_line(src, n_tasks, d.epochs(d.h1_runs()), d.pilot), plot_h=0.42 * len(rows))
+    fig.subplots_adjust(right=0.80)
     return fig, None
 
 
@@ -658,16 +656,16 @@ def chart_battery(d: Data, ov: dict, src: str | None):
     rows = []  # (label, contrast, group)
     h1 = s.get("H1", {})
     if h1.get("pooled", {}).get("estimate") is not None:
-        rows.append(("All access tasks (H1)", h1["pooled"], "h1-pooled"))
+        rows.append(("All data tasks", h1["pooled"], "h1-pooled"))
     for b, c in h1.get("per_battery", {}).items():
         if c.get("estimate") is not None:
             rows.append((BATTERY_LABEL.get(b, b), c, "h1"))
     sp = s.get("structured_public", {}).get("pooled", {})
     if sp.get("estimate") is not None:
-        rows.append(("Structured, public", sp, "other"))
+        rows.append(("Public data APIs", sp, "other"))
     h2 = s.get("H2", {}).get("pooled", {})
     if h2.get("estimate") is not None:
-        rows.append(("Control (H2)", h2, "other"))
+        rows.append(("Search is enough (control)", h2, "other"))
     if not rows:
         return None, "no C-B contrasts in summary.json"
     ys, y = [], 0.0
@@ -697,7 +695,7 @@ def chart_battery(d: Data, ov: dict, src: str | None):
     ax.set_ylim(min(ys) - 0.55, 0.55)
     set_diff_xlim(ax, [v for _, c, _ in rows for v in (c["ci_low"], c["ci_high"], c["estimate"])])
     ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{100 * v:+.0f}" if v else "0"))
-    hs = [Line2D([], [], marker="D", linestyle="", markersize=8, color=ACCENT, label="Access batteries (H1)")]
+    hs = [Line2D([], [], marker="D", linestyle="", markersize=8, color=ACCENT, label="Tasks that need data")]
     if any(g == "other" for _, _, g in rows):
         hs.append(Line2D([], [], marker="o", linestyle="", markersize=8, color=ARM_COLOR["A"], label="Reported separately"))
     legend_top(ax, hs)
