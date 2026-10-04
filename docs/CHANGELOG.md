@@ -45,3 +45,12 @@
 - Launched them: `logs/main-bc` (B and C, 8 models) and `logs/main-d2` (D, 5 models). Same
   code, tasks and settings. Gemini 3.1 Pro runs every arm in `logs/main-gpro` and
   `logs/main-d-gpro`.
+
+## 2026-10-04 ~03:50Z: arm A finished for 4 models; analysis log policy
+- `eval_retry` processed the interrupted logs one at a time and stalled on the excluded
+  direct-Google Gemini Pro log, which kept hitting its quota. Arm A for claude-opus-5-5,
+  grok-4.7, gpt-6-luna and deepseek-v4-pro was rerun fresh in `logs/main-a2`.
+- Analysis policy, fixed now and before any results are read: use only logs with status
+  `success`; one sample per (model, arm, task, epoch); exclude
+  `google/gemini-3.1-pro-preview` (rerouted). Interrupted partial logs (status
+  `started`/`error`) are kept for audit but not scored.

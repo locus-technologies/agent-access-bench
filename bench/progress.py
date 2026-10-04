@@ -8,7 +8,7 @@ EXPECTED = {"A": 231, "B": 231, "C": 231, "D": 135}
 EXCLUDE = {"google/gemini-3.1-pro-preview"}  # rerouted via OpenRouter (CHANGELOG)
 
 done = defaultdict(set)
-for d in ("logs/main", "logs/main-d", "logs/main-gpro", "logs/main-d-gpro", "logs/main-bc", "logs/main-d2"):
+for d in ("logs/main", "logs/main-d", "logs/main-gpro", "logs/main-d-gpro", "logs/main-bc", "logs/main-d2", "logs/main-a2"):
     for info in list_eval_logs(d):
         h = read_eval_log(info.name, header_only=True)
         if h.eval.model in EXCLUDE:
