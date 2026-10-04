@@ -63,3 +63,10 @@
 - If the rerun also errors, the sample counts as a failure. Agent timeouts and message-limit
   hits are never rerun; they are failures as pre-registered.
 - At the time of writing, 28 such samples exist across arms B, C and D, out of about 6,800.
+
+## 2026-10-04 ~06:25Z: spend stream
+- The sequential spend loop reached `google/gemini-3.1-pro-preview` (direct route, capped at
+  250 requests a day) and stalled for about an hour. It was stopped. Spend runs for Gemini 3.1
+  Pro use `openrouter/google/gemini-3.1-pro-preview`, as in the core matrix. The remaining
+  models (gemini-3.8-flash, grok-4.7, deepseek-v4-pro) run in parallel processes. Spend runs
+  from the direct route are excluded with the same policy as the core.
