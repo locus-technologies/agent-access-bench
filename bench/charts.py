@@ -454,14 +454,14 @@ def chart_harness(d: Data, ov: dict, src: str | None, n_boot: int):
             if a == "C":
                 ax.annotate(pp(c["estimate"]), (c["ci_high"], -i - off[a]), xytext=(6, 0), textcoords="offset points",
                             va="center", fontsize=11.5, color=INK, fontweight="bold")
-    labels = [f"{HARNESS_LABEL.get(r['harness'], r['harness'])}, {short_model(r['model'], d.names)} (n={r.get('C', r.get('C-mcp-only'))['n_tasks']})"
+    labels = [f"{HARNESS_LABEL.get(r['harness'], r['harness'])}, {short_model(r['model'], d.names)} ({r.get('C', r.get('C-mcp-only'))['n_tasks']} tasks)"
               for r in res]
     ax.set_yticks([-i for i in range(len(res))], labels)
     ax.set_ylim(-len(res) + 0.45, 0.55)
     set_diff_xlim(ax, [v for r in res for a in arms if a in r for v in (r[a]["ci_low"], r[a]["ci_high"], r[a]["estimate"])])
     ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{100 * v:+.0f}" if v else "0"))
     hs = [Line2D([], [], marker=ARM_MARKER[a], linestyle="", markersize=8, color=ARM_COLOR[a],
-                 label="Locus Pro per the docs (MCP + skill) minus stock" if a == "C" else "Locus MCP only minus stock")
+                 label="Locus with its skill (as documented)" if a == "C" else "Locus MCP server only")
           for a in arms]
     legend_top(ax, hs, ncol=1)
     ests = [r["C"]["estimate"] for r in res if "C" in r]
@@ -589,68 +589,55 @@ def chart_tokens(d: Data, ov: dict, src: str | None):
 
 
 def chart_spend(d: Data, ov: dict, src: str | None):
-    by_task: dict[str, dict] = defaultdict(lambda: {"budget": None, "C": [], "D": []})
-    c_from_ledger = False
-    for rec in load_ledger(d.ledger_path):
-        t = str(rec.get("task_id", ""))
-        if t.startswith("spend-") and rec.get("spent_usd") is not None and rec.get("arm") == "C":
-            by_task[t]["budget"] = float(rec["budget_usd"])
-            by_task[t]["C"].append(float(rec["spent_usd"]))
-            c_from_ledger = True
-    for v in d.s.get("H4", {}).get("from_logs", {}).values():
-        if v["arm"] not in ("C", "D") or (v["arm"] == "C" and c_from_ledger):
-            continue
-        for run in v["runs"]:
-            by_task[run["task"]]["budget"] = float(run["budget_usd"])
-            by_task[run["task"]][v["arm"]].append(float(run["spent_usd"]))
-    tasks = sorted(t for t, v in by_task.items() if v["budget"] is not None and (v["C"] or v["D"]))
-    if not tasks:
-        return None, "no spend-battery runs in ledger or summary"
-    arms = [a for a in ("C", "D") if any(by_task[t][a] for t in tasks)]
-    off = {"C": -0.13, "D": 0.13} if len(arms) == 2 else {arms[0]: 0.0}
-    fig, ax = new_fig(5.2)
-    style_axes(ax, "y")
-    ax.spines["bottom"].set_visible(True)
-    n_runs, breaches = 0, 0
-    for i, t in enumerate(tasks):
-        v = by_task[t]
-        ax.hlines(v["budget"], i - 0.38, i + 0.38, color=INK, linewidth=2.5, zorder=2)
-        for a in arms:
-            vals = v[a]
-            k = len(vals)
-            xs = i + off[a] + (np.arange(k) - (k - 1) / 2) * min(0.05, 0.22 / max(1, k))
-            ax.plot(xs, vals, marker=ARM_MARKER[a], linestyle="", markersize=8,
-                    markerfacecolor=ARM_COLOR[a] if a == "C" else SURFACE, markeredgecolor=ARM_COLOR[a] if a == "D" else SURFACE,
-                    markeredgewidth=1.6 if a == "D" else 1.5, zorder=3, alpha=0.9, clip_on=False)
-            if a == "C":
-                n_runs += k
-                breaches += sum(x > v["budget"] + 1e-9 for x in vals)
-    ax.set_xticks(range(len(tasks)), [t.replace("spend-", "Task ") for t in tasks])
-    top = max([by_task[t]["budget"] for t in tasks] + [x for t in tasks for a in arms for x in by_task[t][a]])
-    ax.set_ylim(0, top * 1.12)
-    ax.set_xlim(-0.6, len(tasks) - 0.4)
-    ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"${v:,.2f}"))
-    hs = [Line2D([], [], color=INK, linewidth=2.5, label="Budget")]
-    if "C" in arms:
-        hs.append(Line2D([], [], marker=ARM_MARKER["C"], linestyle="", markersize=8, color=ACCENT,
-                         label="+ Locus Pro, funded with exactly the budget"))
-    if "D" in arms:
-        hs.append(arm_handle("D", hollow=True))
-        hs[-1].set_label("+ 7 vendors wired directly (estimated)")
-    legend_top(ax, hs, ncol=len(hs) if len(hs) <= 2 else 2)
-    title = (f"Capped Locus Pro runs stayed within budget in {n_runs - breaches} of {n_runs} runs"
-             if "C" in arms else "Spend against budget on the spend-safety tasks")
-    text = {"title": title,
-            "subtitle": "Each mark is one run. Each Locus run gets its own sub-account funded with exactly the task budget.",
-            "xlabel": None, "ylabel": "Spend per run (USD)",
-            "note": " ".join(x for x in (
-                "C spend of record is the Locus ledger (allocated minus settled balance), all models pooled."
-                if c_from_ledger else "", "D spend is estimated from vendor usage at list prices." if "D" in arms else "") if x)} | ov
-    finish(fig, ax, text, source_line(src, len(tasks), None, d.pilot and not c_from_ledger), plot_h=3.0)
+    """Each run's spend as a share of its own task budget, so every task shares one scale.
+    Two rows: Locus (ledger, funded with exactly the budget) and vendors wired directly (estimate)."""
+    import random as _random
+    rows = [r for r in d.runs if r["battery"] == "spend" and r.get("budget_usd")]
+    series = {}
+    for arm, field in (("C", "spent_usd"), ("D", "vendor_usd_est")):
+        # A run with no ledger record has unknown spend; leave it out rather than count it as $0.
+        vals = [float(r[field]) / float(r["budget_usd"]) for r in rows if r["arm"] == arm and r.get(field) not in ("", None)]
+        if vals:
+            series[arm] = sorted(vals)
+    if not series:
+        return None, "no spend-battery runs in runs.csv"
+    rng = _random.Random(7)
+    order = [a for a in ("C", "D") if a in series]
+    fig, ax = new_fig(1.6 + 0.9 * len(order))
+    style_axes(ax, "x")
+    hi = max(1.15, max(max(v) for v in series.values()) + 0.1)
+    ax.axvspan(1.0, hi, color=GRID, alpha=0.5, zorder=0)
+    ax.axvline(1.0, color=INK, linewidth=2, zorder=2)
+    ax.annotate("Budget", (1.0, 0.5), xytext=(6, 0), textcoords="offset points", va="center", fontsize=11,
+                color=INK, fontweight="bold")
+    for i, arm in enumerate(order):
+        y = -i
+        v = series[arm]
+        ys = [y + rng.uniform(-0.22, 0.22) for _ in v]
+        ax.scatter(v, ys, s=22, color=ARM_COLOR[arm], alpha=0.55, linewidths=0, zorder=3)
+        med, mx = v[len(v) // 2], v[-1]
+        ax.plot([med, med], [y - 0.3, y + 0.3], color=INK, linewidth=2.2, zorder=4)
+        ax.annotate(f"median {100 * med:.0f}%", (med, y + 0.3), xytext=(0, 4), textcoords="offset points",
+                    ha="center", va="bottom", fontsize=10, color=INK_2)
+        ax.annotate(f"max {100 * mx:.0f}%", (mx, y + 0.3), xytext=(0, 4), textcoords="offset points",
+                    ha="right" if mx > 0.85 else "center", va="bottom", fontsize=10, color=INK_2)
+    labels = {"C": "+ Locus Pro\n(capped at the budget)", "D": "+ 7 vendors wired\ndirectly (no cap)"}
+    ax.set_yticks([-i for i in range(len(order))], [labels[a] for a in order])
+    ax.tick_params(axis="y", length=0)
+    ax.set_xlim(0, hi)
+    ax.set_ylim(-len(order) + 0.35, 0.75)
+    ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    n = len(series.get("C", []))
+    zero_c = sum(1 for v in series.get("C", []) if v == 0)
+    text = {"title": "No run went over budget",
+            "subtitle": "Each dot is one run: what it spent as a share of the budget its task gave ($1 to $3). "
+                        "Anything right of the line would be overspending.",
+            "xlabel": "Share of budget spent", "ylabel": "",
+            "note": f"{n} Locus runs ({zero_c} spent nothing) and {len(series.get('D', []))} direct-vendor runs across nine models. "
+                    "Locus spend is from its ledger; direct-vendor spend is estimated at list prices."} | ov
+    finish(fig, ax, text, source_line(src, 5, d.epochs(rows) if hasattr(d, "epochs") else None, d.pilot),
+           plot_h=0.9 * len(order))
     return fig, None
-
-
-# --- 06 by battery ---------------------------------------------------------------------------------
 
 
 def chart_vendors(d: Data, ov: dict, src: str | None):
@@ -688,6 +675,40 @@ def chart_vendors(d: Data, ov: dict, src: str | None):
     return fig, None
 
 
+def chart_headline_social(d: Data, ov: dict, src: str | None):
+    """1200x675 headline: pooled success on data tasks for no tools, web search only, + Locus."""
+    h1 = {"gtm", "paiddata", "multistep", "travel", "structured-hostile"}
+    by = defaultdict(lambda: defaultdict(list))
+    for r in d.runs:
+        if r["battery"] in h1 and r["arm"] in ("A", "B", "C"):
+            by[r["arm"]][r["model"]].append(float(r["success"]))
+    if not all(a in by for a in "ABC"):
+        return None, "missing arms for headline"
+    pooled = {a: sum(sum(v) / len(v) for v in by[a].values()) / len(by[a]) for a in "ABC"}
+    improved = sum(1 for m in by["C"] if m in by["B"] and
+                   sum(by["C"][m]) / len(by["C"][m]) > sum(by["B"][m]) / len(by["B"][m]))
+    fig, ax = new_fig(675 / DPI_LOGICAL, 1200 / DPI_LOGICAL)
+    style_axes(ax, "x")
+    labels = {"A": "No tools", "B": "Web search only", "C": "+ Locus Pro"}
+    colors = {"A": ARM_COLOR["A"], "B": ARM_COLOR["B"], "C": ACCENT}
+    for i, a in enumerate("ABC"):
+        y = -i
+        ax.barh(y, pooled[a], height=0.62, color=colors[a], zorder=2)
+        ax.annotate(f"{100 * pooled[a]:.0f}%", (pooled[a], y), xytext=(10, 0), textcoords="offset points",
+                    va="center", fontsize=22, fontweight="bold", color=ACCENT if a == "C" else INK)
+    ax.set_yticks([0, -1, -2], [labels[a] for a in "ABC"], fontsize=15)
+    ax.tick_params(axis="y", length=0)
+    ax.set_xlim(0, 1.0)
+    ax.set_ylim(-2.5, 0.5)
+    ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    text = {"title": "Agents finished more data tasks with Locus Pro",
+            "subtitle": f"Share of tasks finished correctly. Average of 9 models on 51 tasks that need real data. "
+                        f"{improved} of {len(by['C'])} models improved.",
+            "xlabel": "", "ylabel": "", "note": ""} | ov
+    finish(fig, ax, text, source_line(src, None, None, d.pilot))
+    return fig, None
+
+
 def chart_battery(d: Data, ov: dict, src: str | None):
     s = d.s
     rows = []  # (label, contrast, group)
@@ -702,7 +723,7 @@ def chart_battery(d: Data, ov: dict, src: str | None):
         rows.append(("Public data APIs", sp, "other"))
     h2 = s.get("H2", {}).get("pooled", {})
     if h2.get("estimate") is not None:
-        rows.append(("Search is enough (control)", h2, "other"))
+        rows.append(("Control, search is enough", h2, "other"))
     if not rows:
         return None, "no C-B contrasts in summary.json"
     ys, y = [], 0.0
@@ -724,7 +745,7 @@ def chart_battery(d: Data, ov: dict, src: str | None):
         ax.annotate(pp(c["estimate"]), (c["ci_high"] if c["ci_high"] is not None else c["estimate"], yy), xytext=(6, 0),
                     textcoords="offset points", va="center", fontsize=11.5, color=INK,
                     fontweight="bold" if g == "h1-pooled" else "normal")
-    ax.set_yticks(ys, [f"{lab} (n={c['n_tasks']})" for lab, c, _ in rows])
+    ax.set_yticks(ys, [f"{lab} ({c['n_tasks']} tasks)" for lab, c, _ in rows])
     for tl, (_, _, g) in zip(ax.get_yticklabels(), rows):
         if g == "h1-pooled":
             tl.set_fontweight("bold")
@@ -782,8 +803,7 @@ def main() -> None:
             continue
         print(f"wrote {save(fig, out / f'{name}.png')}")
         if name == "01-success-by-arm":
-            soc = overrides.get("01-success-by-arm-social", ov("01-success-by-arm"))
-            fig, _ = chart_success(d, soc, src, social=True)
+            fig, _ = chart_headline_social(d, overrides.get("01-success-by-arm-social", {}), src)
             print(f"wrote {save(fig, out / f'{name}-social.png', dpi=DPI_LOGICAL)}  (1200x675)")
 
 
