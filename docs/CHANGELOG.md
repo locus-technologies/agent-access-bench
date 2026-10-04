@@ -103,3 +103,14 @@
   `results/raw/harness/superseded/gemini-cli-B-contaminated.jsonl`. Gemini CLI arm B is rerun
   in full.
 - The exposed keys went into Gemini model context and are being rotated.
+
+## 2026-10-04 ~08:45Z: Gemini CLI excluded from the harness track
+- The rerun of Gemini CLI arm B (homes in /tmp) was also contaminated. With shell access to
+  the host, its agents found the repo path through `ps`, read the repo `.env` by absolute
+  path, and called Locus with curl. The Locus key appears in 6 of 69 traces, and $26.68 was
+  spent through Locus. The last runs then failed with HTTP 403 because Google placed a billing
+  hold ("dunning") on the project behind the shared Gemini key.
+- None of the other five harnesses' arm-B traces contain a Locus key or read a `.env` file.
+- Gemini CLI is excluded from the harness-track results and charts. Its rows are kept in
+  `results/raw/harness/superseded/`. A valid rerun needs the harness inside a container with
+  no host filesystem, which is future work. The harness track reports five harnesses.
