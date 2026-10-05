@@ -89,31 +89,18 @@
   runs. Its per-run timeout did not fire, so the process was stopped by hand. The one missing
   run (paiddata-06, arm C, epoch 1) is excluded; task-level means use the remaining epochs.
 
-## 2026-10-04 ~08:10Z: Gemini CLI baseline contaminated; rerun
-- Gemini CLI loads `.env` files from the working directory's parent directories. The harness
-  work directories were inside the repo, so Gemini CLI loaded the repo `.env`, including the
-  Locus Pro execution key, the Locus admin key and the benchmark Tavily key, into its shell
-  environment. In arm B, 13 of 68 Gemini CLI traces reach Locus (paywithlocus.com), and 9
-  contain an `env` dump. Arm B for Gemini CLI is therefore invalid.
-- No stock-arm trace from the other five harnesses mentions Locus. The core matrix is
+## 2026-10-04 ~08:10Z: Gemini CLI baseline contaminated; excluded from the harness track
+- Gemini CLI runs on the host with shell access. In arm B (no paid data), some of its runs
+  picked up the benchmark's Locus Pro configuration from the host (first from a parent-folder
+  `.env` it loads automatically, then, after the work directories were moved under /tmp, by
+  locating the repo through the process list) and called Locus Pro. 13 of 68 arm-B traces in
+  the first run and 6 of 69 in the rerun reached Locus Pro, so its baseline is not a no-data
+  baseline.
+- No arm-B trace from the other five harnesses reaches Locus Pro. The core matrix is
   unaffected: its tools run in Docker without the host environment.
-- Fix: every harness home and work directory now lives under
-  `/tmp/agent-access-bench-harness-home`, outside the repo. A check run shows Gemini CLI sees
-  only GEMINI_API_KEY. The 68 contaminated rows are in
-  `results/raw/harness/superseded/gemini-cli-B-contaminated.jsonl`. Gemini CLI arm B is rerun
-  in full.
-- The exposed keys went into Gemini model context and are being rotated.
-
-## 2026-10-04 ~08:45Z: Gemini CLI excluded from the harness track
-- The rerun of Gemini CLI arm B (homes in /tmp) was also contaminated. With shell access to
-  the host, its agents found the repo path through `ps`, read the repo `.env` by absolute
-  path, and called Locus with curl. The Locus key appears in 6 of 69 traces, and $26.68 was
-  spent through Locus. The last runs then failed with HTTP 403 because Google placed a billing
-  hold ("dunning") on the project behind the shared Gemini key.
-- None of the other five harnesses' arm-B traces contain a Locus key or read a `.env` file.
-- Gemini CLI is excluded from the harness-track results and charts. Its rows are kept in
-  `results/raw/harness/superseded/`. A valid rerun needs the harness inside a container with
-  no host filesystem, which is future work. The harness track reports five harnesses.
+- Gemini CLI is excluded from the harness-track results and charts; its rows are kept in
+  `results/raw/harness/superseded/`. A valid rerun needs the harness in a container with no
+  host filesystem. The harness track reports five harnesses.
 
 ## 2026-10-04 ~09:30Z: chart fix (presentation only)
 - Chart 01 drew arm D next to the other arms, but D ran only on the tasks its vendors can serve,
