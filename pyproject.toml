@@ -1,7 +1,7 @@
 [project]
 name = "agent-access-bench"
 version = "0.1.0"
-description = "Add your description here"
+description = "Pre-registered benchmark: do AI agents finish more real tasks with paid data access?"
 authors = [
     { name = "cdermott7", email = "dermottcole@gmail.com" }
 ]
@@ -21,8 +21,8 @@ dependencies = [
     "xai-sdk>=1.20.0",
 ]
 
-[project.scripts]
-agent-access-bench = "agent_access_bench:main"
+[dependency-groups]
+dev = ["pytest>=8"]
 
 [build-system]
 requires = ["uv_build>=0.12.23,<0.13.0"]

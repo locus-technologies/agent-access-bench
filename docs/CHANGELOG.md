@@ -140,3 +140,39 @@
   H1 +26.0 [+16.9, +34.8]; flights B 10%, C 50%. Constraint checks alone: B 13%, C 72%.
 - Because the correction was found after seeing results and favours Locus, it does not change the
   headline.
+
+## 2026-10-05: grading corrections for two tasks (deviation, found after seeing results)
+Found while reviewing the tasks where arm C scored below arm B. Applied by `bench/regrade.py`,
+identically to every arm and model, and analysed with `GRADE_OVERRIDES` into
+`results/full-corrected`. The pre-registered results stay the headline.
+- gtm-05 (Mews CEO + work email). The grader accepted only `mews.com`. Mews used
+  `mewssystems.com` before its rebrand and that domain still receives mail. All five failing
+  arm-C runs named the right CEO and gave a `mewssystems.com` address from a contact database.
+  Correction: accept `mewssystems.com` under the same rule (ZeroBounce "valid"). Statuses are
+  checked at regrade time (2026-10-05), not run time; all six such addresses returned "valid".
+  One arm-B run that had failed only because its grader call errored now passes on regrade.
+  Result: B 93% -> 96%, C 81% -> 100%, D 89% unchanged, A 4% unchanged.
+- multistep-06 (PostHog roles + who runs it). Claim 2 says a role passes if it is on the careers
+  page "or in the 2026-10-03 snapshot in notes", but the judge was never given the notes, and
+  it may not use outside knowledge. Claims 2 and 3 (role and location match the listing) were
+  therefore unverifiable, and the verdicts turned on how confidently an answer cited the
+  careers page. Correction: the judge now sees the task notes (`judge_claims(reference=...)`).
+  Result: B 74% -> 52%, C 37% -> 48%, D 48% -> 33%, A 0%. No other task's rubric cites the notes.
+- Flight price extraction (corrected rule only): the "first currency amount" rule read the user's
+  budget cap as the fare in answers that restate it first ("under your $350 budget"), in every
+  arm. Under `FLIGHT_MIN_RULE=specific` an amount preceded by budget/cap/limit/under/max/spend
+  is skipped. The pre-registered rule is unchanged.
+- `results/full-corrected` = all of the above plus the flight rule above (`FLIGHT_MIN_RULE=specific`)
+  and supersedes `results/full-flightfix`. H1 +27.1 [+18.4, +35.8] (pre-registered: +25.0
+  [+16.1, +33.8]). Data tasks B 42.8%, C 69.9%. Flights B 11%, C 51%. Multistep B 63%, C 67%.
+  H2 and H3 unchanged.
+- Reviewed and left as scored: multistep-04, multistep-11, control-06, gtm-08 (genuine agent
+  errors); structured-06, structured-08, paiddata-06 (Locus `web_research` returned stale or
+  wrong data; real arm-C failures); spend-02 (5 arm-C runs crashed on connection errors to the
+  Locus MCP server or web search; counted as failures under the infra-error rule because no
+  rerun exists); travel-02 (a cached $125 fare with a flight number still sets the bar, as noted
+  above); multistep-09 (about half of arm C's failures look like judge errors on the
+  unverifiable "sells CLM per its own site" claim; flagged for the human spot-check rather
+  than re-scored, because the fix would mean rewriting the rubric).
+- Spend battery: 6 of 135 arm-C runs (and 3 of 135 arm-D runs) have no ledger or trace spend
+  record. They are excluded from the spend chart rather than plotted as $0.

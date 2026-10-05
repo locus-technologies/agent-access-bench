@@ -1,16 +1,13 @@
-"""Load model and vendor keys from AWS Secrets Manager into the process env.
+"""Load model and vendor keys into the process env.
 
-Keys are read at runtime and never written to disk. Only the fields listed in
-KEYS are copied, so the rest of the prod config never enters the process.
+Keys come from `.env` (see `.env.example`). Optionally, set BENCH_AWS_SECRET_ID (and
+BENCH_AWS_REGION) to fill any key still missing from one AWS Secrets Manager JSON secret.
+Only the fields listed in KEYS are copied from it; nothing is written to disk.
 """
 
 import json
 import os
 
-import boto3
-
-SECRET_ID = "locus-wallet/prod/config"
-REGION = "us-west-1"
 
 KEYS = {
     # model providers
@@ -50,7 +47,13 @@ def load_env_file(path: str = ".env") -> None:
 def load_secrets() -> list[str]:
     """Populate os.environ; return the env names that were set."""
     load_env_file()
-    raw = boto3.client("secretsmanager", region_name=REGION).get_secret_value(SecretId=SECRET_ID)
+    secret_id = os.environ.get("BENCH_AWS_SECRET_ID")
+    if not secret_id:
+        return []
+    import boto3
+
+    region = os.environ.get("BENCH_AWS_REGION", "us-east-1")
+    raw = boto3.client("secretsmanager", region_name=region).get_secret_value(SecretId=secret_id)
     config = json.loads(raw["SecretString"])
     loaded = []
     for src, dst in KEYS.items():

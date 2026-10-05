@@ -1,2 +1,1 @@
-def main() -> None:
-    print("Hello from agent-access-bench!")
+"""Package placeholder; the benchmark code lives in bench/."""

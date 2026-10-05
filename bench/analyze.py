@@ -150,10 +150,17 @@ def parse_amount(s: str) -> float:
     return float(s)
 
 
+# Corrected rule only (CHANGELOG 2026-10-05): an amount that restates the user's budget cap
+# ("under your $350 budget", "max $350") is not the fare, so skip it.
+BUDGET_CONTEXT = re.compile(r"\b(budget|cap|limit|under|max(imum)?|no more than|spend)\b[^.\n]{0,25}$", re.I)
+
+
 def extract_price(answer: str) -> dict | None:
     """The stated price: the FIRST currency-tagged amount in the answer. Agents lead with
     the offer they recommend; later amounts are alternatives or caveats. Deterministic."""
-    m = _PRICE_RE.search(answer or "")
+    answer = answer or ""
+    m = next((m for m in _PRICE_RE.finditer(answer)
+              if FLIGHT_MIN_RULE == "prereg" or not BUDGET_CONTEXT.search(answer[max(0, m.start() - 40): m.start()])), None)
     if not m:
         return None
     if m.group("sym"):
@@ -420,6 +427,23 @@ INFRA_ERROR = ("ConnectError", "ConnectTimeout", "Connection closed", "Error que
 
 def is_infra_error(err) -> bool:
     return bool(err) and any(k in str(err) for k in INFRA_ERROR)
+
+
+GRADE_OVERRIDES = os.environ.get("GRADE_OVERRIDES", "")
+
+
+def apply_overrides(runs: list[dict], path: str) -> None:
+    """Post-hoc regrades from bench/regrade.py (see docs/CHANGELOG.md). Off unless GRADE_OVERRIDES is set."""
+    if not path:
+        return
+    new = {}
+    for line in Path(path).read_text().splitlines():
+        o = json.loads(line)
+        new[(o["log"], o["task"], o["epoch"])] = o["success"]
+    for r in runs:
+        k = (r["log"], r["task"], r["epoch"])
+        if k in new:
+            r["success_raw"] = r["success"] = new[k]
 
 
 def select_runs(runs: list[dict]) -> list[dict]:
@@ -709,6 +733,12 @@ def tables_md(s: dict, sources: list[str]) -> str:
     return "\n".join(L)
 
 
+def rel(path) -> str:
+    """Repo-relative path for the summary, so it carries no local directories."""
+    p = Path(path).resolve()
+    return str(p.relative_to(Path.cwd())) if p.is_relative_to(Path.cwd()) else str(path)
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     p.add_argument("log_dirs", nargs="+")
@@ -724,14 +754,16 @@ def main() -> None:
     fx = json.loads(Path(a.fx).read_text())["usd_per_unit"]
     tool_tokens = json.loads(TOOL_TOKENS_PATH.read_text())["arms"] if TOOL_TOKENS_PATH.exists() else {}
     runs, sources = load_runs(a.log_dirs, prices, tool_tokens)
+    apply_overrides(runs, GRADE_OVERRIDES)
     summary = analyze(runs, load_ledger(Path(a.ledger)), fx, a.include_pilot, a.n_boot)
     graded = [v for src in sources for v in src["grading_usd"].values()]
     summary["grading_cost"] = {"note": "Judge model cost from log-level stats; not part of any arm's cost.",
                                "total_usd": round(sum(v for v in graded if v is not None), 6),
                                "unpriced_judges": sorted({m for src in sources for m, v in src["grading_usd"].items() if v is None}),
                                "per_log": sources}
-    summary["inputs"] = {"log_dirs": a.log_dirs, "logs": [src["log"] for src in sources], "prices": a.prices, "fx": a.fx,
-                         "ledger": a.ledger, "tool_definition_tokens": str(TOOL_TOKENS_PATH)}
+    summary["inputs"] = {"log_dirs": a.log_dirs, "logs": [src["log"] for src in sources], "prices": rel(a.prices),
+                         "fx": rel(a.fx), "ledger": rel(a.ledger), "tool_definition_tokens": rel(TOOL_TOKENS_PATH),
+                         "grade_overrides": GRADE_OVERRIDES or None, "flight_min_rule": FLIGHT_MIN_RULE}
 
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

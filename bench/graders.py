@@ -67,14 +67,17 @@ def judge_model_for(agent_model: str) -> str:
     return JUDGE_FOR_ANTHROPIC if agent_model.startswith("anthropic/") else JUDGE_DEFAULT
 
 
-async def judge_claims(answer: str, claims: list[str], agent_model: str) -> list[bool]:
+async def judge_claims(answer: str, claims: list[str], agent_model: str, reference: str = "") -> list[bool]:
+    # `reference` is passed only by the post-hoc regrade (bench/regrade.py) for rubrics that cite
+    # the task notes; the pre-registered run never sent it.
+    ref = f"REFERENCE (task notes the claims may cite):\n{reference}\n\n" if reference else ""
     prompt = (
         "You are grading an assistant's final answer against a fixed list of claims. For each "
         "claim, decide whether the ANSWER satisfies it. Be strict: a claim is satisfied only if "
         "the answer clearly states it or provides the required item. Do not use outside "
         "knowledge to fill gaps, but you may judge whether stated facts are consistent with the "
         "claim's wording.\n\n"
-        f"ANSWER:\n{answer}\n\nCLAIMS:\n"
+        f"{ref}ANSWER:\n{answer}\n\nCLAIMS:\n"
         + "\n".join(f"{i + 1}. {c}" for i, c in enumerate(claims))
         + '\n\nReply with JSON only: {"verdicts": [true|false, ...]} in claim order.'
     )
