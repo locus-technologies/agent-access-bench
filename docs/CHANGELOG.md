@@ -120,3 +120,23 @@
   so its rates were computed over a different task set. That made the direct-vendor setup look
   better than it is. D is removed from chart 01. Chart 07 compares B, C and D on the same 34
   data tasks: C 76%, D 75%, B 54%. No numbers or analysis changed.
+
+## 2026-10-05: flight "cheapest fare" rule (deviation, found after seeing results)
+- Section 6 of the pre-registration says a flight answer passes when "the returned offer
+  satisfies every constraint and is confirmed by a same-window fare snapshot". The snapshot check
+  was never built. As implemented, any run that passed the constraint checks could set the
+  task's cheapest fare, including approximate or stale quotes. Two cases surfaced in review:
+  - travel-07: a web-search run's "around SGD 126 (≈ $93–99)" for "late October" set the bar,
+    failing every Locus run ($129).
+  - travel-02: a web-search run's $125 from a cached Trip.com page set the bar; live Locus fares
+    were $139–145.
+- Corrected rule (`FLIGHT_MIN_RULE=specific`, applied mechanically and identically to all arms):
+  a run can set the cheapest fare only if its answer names a flight number and states the price
+  without a hedge ("around", "about", "approx", "≈", "~", "roughly", "from", "starting at",
+  "cached"). This fixes travel-07. It cannot detect travel-02's stale quote, which names a
+  flight and an exact price, so that case stands.
+- Both results are reported. The pre-registered rule (`results/full`) stays the headline:
+  H1 +25.0 [+16.1, +33.8]; flights B 10%, C 43%. Corrected (`results/full-flightfix`):
+  H1 +26.0 [+16.9, +34.8]; flights B 10%, C 50%. Constraint checks alone: B 13%, C 72%.
+- Because the correction was found after seeing results and favours Locus, it does not change the
+  headline.

@@ -28,6 +28,7 @@ Conventions, fixed here so they cannot drift:
 from __future__ import annotations
 
 import argparse
+import os
 import csv
 import hashlib
 import json
@@ -168,6 +169,27 @@ def extract_price(answer: str) -> dict | None:
         return None
 
 
+# Which runs may set a task's "cheapest valid fare" (CHANGELOG 2026-10-05).
+#   prereg:   any run that passed the constraint checks (the rule as first implemented).
+#   specific: additionally, the answer names a flight number and states the price without a hedge
+#             ("around", "about", "approx", "≈", "~", "roughly", "from", "starting at", "cached").
+#             Applied mechanically and identically to every arm.
+FLIGHT_MIN_RULE = os.environ.get("FLIGHT_MIN_RULE", "prereg")
+FLIGHT_NO = re.compile(r"\b(?:[A-Z]{2}|[A-Z]\d|\d[A-Z])\s?\d{1,4}\b")
+PRICE_TOKEN = re.compile(r"(?:US\$|\$|USD\s?|€|EUR\s?|£|GBP\s?|SGD\s?|S\$)\s?\d")
+HEDGE = re.compile(r"\b(around|about|approx\w*|roughly|from|starting at|cached|estimate\w*)\b|≈|~", re.I)
+
+
+def specific_offer(answer: str) -> bool:
+    if not answer or not FLIGHT_NO.search(answer):
+        return False
+    m = PRICE_TOKEN.search(answer)
+    if not m:
+        return False
+    window = answer[max(0, m.start() - 30): m.start()]
+    return not HEDGE.search(window) and "cached" not in answer.lower()
+
+
 def apply_flight_rule(runs: list[dict], fx: dict) -> dict:
     """Mutates flight runs: sets flight_price*, flight_min_usd, success (final). Returns audit."""
     by_task: dict[str, list[dict]] = defaultdict(list)
@@ -182,7 +204,8 @@ def apply_flight_rule(runs: list[dict], fx: dict) -> dict:
             r["flight_currency"] = p["currency"] if p else None
             rate = fx.get(p["currency"]) if p else None
             r["flight_price_usd"] = round(p["amount"] * rate, 4) if p and rate else None
-        eligible = [r["flight_price_usd"] for r in rs if r["success_raw"] == 1 and r["flight_price_usd"] is not None]
+        eligible = [r["flight_price_usd"] for r in rs if r["success_raw"] == 1 and r["flight_price_usd"] is not None
+                    and (FLIGHT_MIN_RULE == "prereg" or specific_offer(r.get("answer", "")))]
         min_usd = min(eligible) if eligible else None
         cw = rs[0].get("cheapest_within", 0.10)
         for r in rs:
