@@ -163,3 +163,10 @@ identically to every arm and model, and analysed with `GRADE_OVERRIDES` into
   than re-scored, because the fix would mean rewriting the rubric).
 - Spend battery: 6 of 135 arm-C runs (and 3 of 135 arm-D runs) have no ledger or trace spend
   record. They are excluded from the spend chart rather than plotted as $0.
+
+## 2026-10-05: housekeeping before publication
+- `prereg/PREREGISTRATION.md` section 6 cites `bench/graders/`; the grader is the single file
+  `bench/graders.py`. The pre-registration is frozen, so the path is corrected here only.
+- Launch copy, charts for the write-up and video clips moved to a separate internal repo. The
+  benchmark, tasks, graders, analysis and chart code stay here.
+- Raw traces are published as a release archive built by `scripts/scrub_traces.py`.

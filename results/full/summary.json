@@ -16581,9 +16581,9 @@
    "2026-10-04T06-23-06-00-00_spend-bench_d6PTfxMYebxxTphoqBRA7f.eval",
    "2026-10-04T06-23-06-00-00_spend-bench_oETxyMcaiXE5keuBPJAAHg.eval"
   ],
-  "prices": "/Users/coledermott/agent-access-bench/prereg/model-prices.json",
-  "fx": "/Users/coledermott/agent-access-bench/prereg/fx-rates.json",
-  "ledger": "/Users/coledermott/agent-access-bench/results/raw/spend-ledger.jsonl",
-  "tool_definition_tokens": "/Users/coledermott/agent-access-bench/results/tool-definition-tokens.json"
+  "prices": "prereg/model-prices.json",
+  "fx": "prereg/fx-rates.json",
+  "ledger": "results/raw/spend-ledger.jsonl",
+  "tool_definition_tokens": "results/tool-definition-tokens.json"
  }
 }

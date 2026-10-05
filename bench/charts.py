@@ -1,7 +1,7 @@
 """Publication charts (article + social) from an analysis directory.
 
-    uv run python -m bench.charts results/core --out deliverables/charts
-    uv run python -m bench.charts results/pilot-analysis --out deliverables/charts-pilot --titles titles.json
+    uv run python -m bench.charts results/core --out charts
+    uv run python -m bench.charts results/pilot-analysis --out charts-pilot --titles titles.json
 
 Reads <results_dir>/summary.json (and runs.csv when present) written by bench.analyze, plus
 the tool-definition token file, the spend ledger and the harness-track JSONL files. Writes

@@ -880,9 +880,9 @@
    "2026-10-03T23-17-40-00-00_access-bench_abDjMYGbu5ME8YUFwn2KpY.eval",
    "2026-10-03T23-17-40-00-00_access-bench_oEEF36AztqEU3nTNW7PPyf.eval"
   ],
-  "prices": "/Users/coledermott/agent-access-bench/prereg/model-prices.json",
-  "fx": "/Users/coledermott/agent-access-bench/prereg/fx-rates.json",
-  "ledger": "/Users/coledermott/agent-access-bench/results/raw/spend-ledger.jsonl",
-  "tool_definition_tokens": "/Users/coledermott/agent-access-bench/results/tool-definition-tokens.json"
+  "prices": "prereg/model-prices.json",
+  "fx": "prereg/fx-rates.json",
+  "ledger": "results/raw/spend-ledger.jsonl",
+  "tool_definition_tokens": "results/tool-definition-tokens.json"
  }
 }

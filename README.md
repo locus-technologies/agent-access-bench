@@ -34,6 +34,14 @@ bootstrap, 10,000 resamples.
 - `scripts/`: the shell scripts that launched the full run
 - `docs/`: changelog, task notes, spend protocol, harness notes
 
+## Reproduce the analysis without any keys
+
+```bash
+uv sync
+gh release download traces-v1 -p 'traces-v1.tar.gz' && tar xzf traces-v1.tar.gz   # creates logs/ and results/raw/
+uv run python -m bench.analyze logs/main logs/main-a2 logs/main-bc logs/main-gpro logs/main-d logs/main-d2 logs/main-d-gpro logs/rerun logs/spend --out results/check
+```
+
 ## Run it
 
 Needs Python 3.12+, [uv](https://docs.astral.sh/uv/) and Docker (the Python tool runs in a sandbox).
@@ -76,5 +84,7 @@ BENCH_OFFLINE=1 uv run pytest bench
   run that used it, so a rerun weeks later will not reproduce our exact numbers.
 - Claims-rubric tasks are judged by a model from a different family than the agent
   (`bench/graders.py`).
-- Raw eval logs are large (about 430 MB) and are published separately with emails masked and
-  keys removed.
+- Raw traces (every eval log, the harness-track traces and the spend ledger) are attached to the
+  `traces-v1` GitHub release as one archive. They were produced by `scripts/scrub_traces.py`,
+  which removes credentials and masks the local part of every email address. Unpack it in the
+  repo root, and the analysis commands above run on it unchanged.
