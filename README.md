@@ -86,5 +86,5 @@ BENCH_OFFLINE=1 uv run pytest bench
   (`bench/graders.py`).
 - Raw traces (every eval log, the harness-track traces and the spend ledger) are attached to the
   `traces-v1` GitHub release as one archive. They were produced by `scripts/scrub_traces.py`,
-  which removes credentials and masks the local part of every email address. Unpack it in the
+  which removes credentials and replaces the local part of every email address with a salted hash. `bench.analyze` on the bundle reproduces `results/full` exactly. Unpack it in the
   repo root, and the analysis commands above run on it unchanged.

@@ -5,14 +5,17 @@ addresses removed.
 
 - Every secret value the benchmark loads (from .env and, if configured, AWS) is replaced with
   "[REDACTED]", along with anything shaped like a common API key or bearer token.
-- Every email address keeps its domain and loses its local part ("•••@example.com"), as in
-  the spot-check sample. Graders already logged only the domain and the ZeroBounce status.
+- Every email address keeps its domain; its local part becomes a salted hash
+  ("•••3fa2c1@example.com"), so addresses stay distinct but cannot be recovered. Graders already logged only the domain and the ZeroBounce status.
 - .eval files are zip archives of JSON; each member is rewritten and the archive rebuilt.
 Nothing in a trace that the analysis reads (scores, usage, answers' numbers) is changed, so
 `bench.analyze` on the bundle reproduces results/full.
 """
 
 import argparse
+import hashlib
+import hmac
+import json
 import os
 import re
 from concurrent.futures import ProcessPoolExecutor
@@ -27,10 +30,12 @@ from inspect_ai._util import zipfile as _inspect_zip  # noqa: E402,F401  (adds z
 LOG_DIRS = ["main", "main-a2", "main-bc", "main-gpro", "main-d", "main-d2", "main-d-gpro", "rerun", "spend"]
 RAW = ["harness", "harness_traces", "spend-ledger.jsonl"]
 
-# Mask the run of local-part characters before each "@" that starts a domain. A leading JSON
-# escape (\n, \u00e9, ...) is kept intact so the JSON stays valid, and glued addresses
-# ("a@x.comb@x.com") lose both local parts.
-EMAIL = re.compile(r"(\\u[0-9a-fA-F]{4}|\\.)?[A-Za-z0-9._%+'-]+@(?=[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z]{2,})")
+# Mask the run of local-part characters before each "@" that starts a domain. A leading escape
+# (any backslash run plus the character after it, e.g. \n, or \\n in JSON nested in JSON) is
+# kept so the JSON stays valid. Each local part becomes a short salted hash, so distinct
+# addresses stay distinct (the arm-D cost estimate counts them) but cannot be recovered.
+EMAIL = re.compile(r"(?<!\\)(\\+(?:u[0-9a-fA-F]{4}|.))?([A-Za-z0-9._%+'-]+)@(?=[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z]{2,})")
+SALT = os.urandom(16)
 KEY_SHAPES = re.compile(
     r"\b(?:lcr_(?:prod|stage|beta|test)_[A-Za-z0-9_-]{8,}|tvly-[A-Za-z0-9-]{12,}|sk-[A-Za-z0-9_-]{20,}"
     r"|AIza[0-9A-Za-z_-]{30,}|xai-[A-Za-z0-9]{20,}|claw_[A-Za-z0-9_-]{12,}|AKIA[0-9A-Z]{16})"
@@ -54,7 +59,11 @@ def scrub_text(s: str, secrets: list[str]) -> str:
         if v in s:
             s = s.replace(v, "[REDACTED]")
     s = KEY_SHAPES.sub("[REDACTED]", s)
-    return EMAIL.sub(lambda m: (m.group(1) or "") + "•••@", s)
+    def mask(m: re.Match) -> str:
+        tag = hmac.new(SALT, m.group(2).lower().encode(), hashlib.sha256).hexdigest()[:6]
+        return (m.group(1) or "") + "•••" + tag + "@"
+
+    return EMAIL.sub(mask, s)
 
 
 def scrub_file(src: Path, dst: Path, secrets: list[str]) -> None:
@@ -91,13 +100,21 @@ def main() -> None:
         if f.suffix == ".eval":
             with zipfile.ZipFile(f) as z:
                 blobs = [z.read(n) for n in z.namelist()]
+                for n, b in zip(z.namelist(), blobs):
+                    if n.endswith(".json"):
+                        try:
+                            json.loads(b.decode("utf-8", "surrogateescape"))
+                        except json.JSONDecodeError:
+                            leaks.append(f"{f}:{n} (invalid JSON)")
         else:
             blobs = [f.read_bytes()]
         for b in blobs:
-            if any(v.encode() in b for v in secrets) or KEY_SHAPES.search(b.decode("utf-8", "ignore")):
+            text = b.decode("utf-8", "ignore")
+            unmasked = any(text[m.start(2) - 1: m.start(2)] != "•" for m in EMAIL.finditer(text))
+            if any(v.encode() in b for v in secrets) or KEY_SHAPES.search(text) or unmasked:
                 leaks.append(str(f))
                 break
-    print(f"wrote {len(files)} files to {out}; files with a surviving secret: {len(leaks)}")
+    print(f"wrote {len(files)} files to {out}; problems (secret, unmasked email or invalid JSON): {len(leaks)}")
     if leaks:
         print("\n".join(leaks[:20]))
         sys.exit(1)
