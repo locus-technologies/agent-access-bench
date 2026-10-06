@@ -159,8 +159,8 @@ identically to every arm and model, and analysed with `GRADE_OVERRIDES` into
   Locus MCP server or web search; counted as failures under the infra-error rule because no
   rerun exists); travel-02 (a cached $125 fare with a flight number still sets the bar, as noted
   above); multistep-09 (about half of arm C's failures look like judge errors on the
-  unverifiable "sells CLM per its own site" claim; flagged for the human spot-check rather
-  than re-scored, because the fix would mean rewriting the rubric).
+  unverifiable "sells CLM per its own site" claim; left as scored, because the fix
+  would mean rewriting the rubric).
 - Spend battery: 6 of 135 arm-C runs (and 3 of 135 arm-D runs) have no ledger or trace spend
   record. They are excluded from the spend chart rather than plotted as $0.
 
@@ -170,3 +170,7 @@ identically to every arm and model, and analysed with `GRADE_OVERRIDES` into
 - Launch copy, charts for the write-up and video clips moved to a separate internal repo. The
   benchmark, tasks, graders, analysis and chart code stay here.
 - Raw traces are published as a release archive built by `scripts/scrub_traces.py`.
+- The blinded human audit of graded runs (pre-registration section 6, and the 250-item sample
+  above) was not carried out. Grader accuracy rests on the rubrics, the cross-family judge and
+  the task-by-task review recorded in this changelog, not on a human agreement rate.
+  `bench/audit_sample.py` and the unreviewed sample are removed.

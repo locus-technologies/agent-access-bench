@@ -78,3 +78,15 @@ class Task(BaseModel):
     truth_sources: list[str]  # where the gold came from (URLs, filings, pages), for the audit
     truth_checked_on: str  # YYYY-MM-DD
     notes: str = ""
+
+
+def load_tasks(pattern: str = "tasks/*.jsonl") -> dict[str, Task]:
+    import glob
+
+    out = {}
+    for f in glob.glob(pattern):
+        for line in open(f):
+            if line.strip():
+                t = Task.model_validate_json(line)
+                out[t.id] = t
+    return out

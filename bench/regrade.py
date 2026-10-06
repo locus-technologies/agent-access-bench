@@ -22,7 +22,7 @@ load_secrets()
 from inspect_ai.log import read_eval_log_samples  # noqa: E402
 
 from bench import graders  # noqa: E402
-from bench.audit_sample import load_tasks  # noqa: E402
+from bench.task_schema import load_tasks  # noqa: E402
 
 # task id -> what changes. Keep each entry tied to a CHANGELOG entry.
 CORRECTIONS = {

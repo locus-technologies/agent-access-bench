@@ -20,7 +20,6 @@ results are kept.
 
 - `results/full/`: pre-registered analysis (`tables.md` to read, `summary.json`, `runs.csv`)
 - `results/full-corrected/`: the same runs with the post-hoc grading corrections in the changelog
-- `results/spot-check/`: the blinded human audit sample
 
 Headline (H1, data tasks, arm C minus arm B): +25.0 points [+16.1, +33.8], 95% clustered
 bootstrap, 10,000 resamples.
