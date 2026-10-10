@@ -8,5 +8,8 @@
     "firecrawl-mcp": "3.27.3",
     "openclaw": "^2026.9.8",
     "tavily-mcp": "0.2.22"
+  },
+  "overrides": {
+    "axios": "^1.20.0"
   }
 }
