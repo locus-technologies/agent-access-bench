@@ -8,5 +8,10 @@
     "firecrawl-mcp": "3.27.3",
     "openclaw": "^2026.9.8",
     "tavily-mcp": "0.2.22"
+  },
+  "overrides": {
+    "axios": "^1.20.0",
+    "@modelcontextprotocol/sdk": "^1.32.0",
+    "zod@^4": "^4.6.6"
   }
 }
